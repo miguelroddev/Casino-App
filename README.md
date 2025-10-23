@@ -1,16 +1,3 @@
-# casino_app
+# 🎰 Casino App
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A simple **Flutter** application built as a demo casino workflow integrated with functional casino games. With this app I intend on developing all the logic behind both a casino management work flow (profit per day/per game, number of games played per month, etc) but also integrate it at the same time with a player interface where a player can play games (I plan to implement roulette and BlackJack firstly).
