@@ -1,6 +1,6 @@
 # UML OF THE PROJECT
 
-** I wrote the following UML to help me modulate and think more broadly about all the little steps I need to complete first to make the idea of the casino app into fruition**
+**(I wrote the following UML to help me modulate and think more broadly about all the little steps I need to complete first to make the idea of the casino app into fruition)**
 
 
 ### Classes:
@@ -114,6 +114,7 @@ BANIDO
 ### GameType<enumeration>
 
 +------------------------------------------------------------------------------------------------+
+
 BLACK_JACK
 
 ROULETTE
