@@ -1,3 +1,5 @@
+import 'package:casino_app/core/card/card.dart';
+
 enum GameType{
   BLACK_JACK,
   ROULETTE;
@@ -11,4 +13,5 @@ enum GameType{
         return "Roulette";
     }
   }
+
 }

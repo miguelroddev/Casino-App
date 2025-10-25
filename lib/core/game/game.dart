@@ -6,9 +6,11 @@ import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/round/round.dart';
 
 abstract class Game{
-  abstract final GameType gameType;
-  abstract Round _ronda;
-  Set _previousRounds = new HashSet();
+  final GameType gameType;
+  Round _round;
+  Set<Round> _previousRounds = new HashSet();
+
+  Game(this.gameType, this._round);
 
   void endGame();
   void checkGameEnd();
