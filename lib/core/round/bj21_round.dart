@@ -28,7 +28,10 @@ class BlackJackRound extends Round{
     if (idExists == false){
       //throw PlayerNotInRoundException
     }
-    
+  }
+
+  void bet(Player player, int money){
+    player.bet(money);
   }
 
   List<Hand> getHands(int idPlayer){

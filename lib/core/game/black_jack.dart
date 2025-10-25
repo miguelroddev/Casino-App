@@ -1,15 +1,16 @@
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/deck.dart';
+import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
-import 'package:casino_app/core/round/round.dart';
+import 'package:casino_app/core/round/bj21_round.dart';
 
 class BlackJack extends Game{
   late Deck _deck;
 
-  BlackJack(GameType gameType, Round round, int numDecks) : super(gameType, round){
+  BlackJack(BlackJackRound round, int numDecks) : super(GameType.BLACK_JACK, round){
     _deck = generateBlackjackDeck(numDecks);
   }
 
@@ -77,7 +78,33 @@ class BlackJack extends Game{
     deck.cardsAtuais.shuffle();
     return deck;
   }
-  Card changeAceValue(Card ace){
+
+  int calculateHand(Hand hand){
+    List<Card> cards = hand.cards;
+    if (cards.isEmpty){
+      //throw NoCardInHandException
+    }
+    int sum = 0;
+    int numAce = 0;
+    for (Card card in cards){
+      if(card.rank == Rank.ACE){
+        numAce += 1;
+      }else{
+        sum += card.value;
+      }
+    }
+    if(numAce>0){
+      if (sum +11 + numAce -1 <= 21){ //there can never be 2 Aces with the value of 11
+        return sum +11 + numAce -1;
+      }
+      else{
+        return sum + numAce;
+      }
+    }
+    return sum;
+  }
+
+  Card changeAceValue(Card ace){ // useless method? maybe.
     if (ace.rank != Rank.ACE){
       //throw NotAceException
     }
