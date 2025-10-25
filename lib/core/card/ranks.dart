@@ -1,3 +1,5 @@
+import 'package:casino_app/core/card/suit_type.dart';
+
 enum Rank {
   ACE,
   TWO,

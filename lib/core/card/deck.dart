@@ -6,7 +6,6 @@ class Deck {
   List<Card> cards = [];
   
   Deck(this.numDecks, GameType gameType){
-    generateDeck(numDecks, gameType);
   }
 
 }
