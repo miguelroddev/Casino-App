@@ -1,4 +1,5 @@
 import 'package:casino_app/core/card/card.dart';
+import 'package:casino_app/core/card/deck.dart';
 import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
 import 'package:casino_app/core/game/game.dart';
@@ -6,12 +7,20 @@ import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/round/round.dart';
 
 class BlackJack extends Game{
+  late Deck _deck;
 
-  BlackJack(GameType gameType, Round round) : super(gameType, round);
+  BlackJack(GameType gameType, Round round, int numDecks) : super(gameType, round){
+    _deck = generateBlackjackDeck(numDecks);
+  }
+
+  //getter
+  Deck get deck => _deck;
 
   void endGame(){}
   void checkGameEnd(){}
-  void startRound(){}
+  void startRound(){
+    
+  }
 
   int getValue(Rank rank){
     switch (rank) {
@@ -44,17 +53,40 @@ class BlackJack extends Game{
     }
   }
 
-  List<Card> _generateBlackjackDeck() {
-    final List<Card> deck = [];
-    final List<String> ranks = Rank.values;
+  Deck generateBlackjackDeck(int numDecks) {
+    if (numDecks <= 0 || numDecks > 8){
+      //throw InvalidAmountDecksException 
+    }
+    
+    List<Card> deck = [];
+    List<Rank> ranks = Rank.values;
 
-    for (final suit in SuitType.values) {
-      for (final rank in ranks) {
-        final int value = _getCardValue(rank);
-        deck.add(Card(suit, rank, value));
+    for (int i=0; i<numDecks; i++) {
+      for (SuitType suit in SuitType.values) {
+        for (Rank rank in ranks) {
+          int value = getValue(rank);
+          deck.add(Card(suit, value, rank));
+        }
       }
     }
+    deck.shuffle();
+    return new Deck(GameType.BLACK_JACK, deck);
+  }
 
+  Deck shuffle(Deck deck){
+    deck.cardsAtuais.shuffle();
     return deck;
+  }
+  Card changeAceValue(Card ace){
+    if (ace.rank != Rank.ACE){
+      //throw NotAceException
+    }
+    if (ace.value == 11){
+      ace.changeValue(1);
+      return ace;
+    }else{
+      ace.changeValue(11);
+      return ace;
+    }
   }
 }

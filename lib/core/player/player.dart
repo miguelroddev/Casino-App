@@ -21,7 +21,36 @@ class Player{
   int get totalProfit => _totalProfit;
   int get totalMoneyBetted => _totalMoneyBetted;
 
+  void increaseBankRoll(int money){
+    _bankroll += money;
+  }
 
+  void endSession(){
+    _bankroll += _sessionMoney;
+    _sessionMoney = 0;
+  }
+
+  void addSessionMoney(int money){
+    if (money <= 0){
+      //throw InvalidMoneyAmountException
+    }
+    if(_bankroll - money <0){
+      // throw NotEnoughMoneyException
+    }
+    _bankroll -= money;
+    _sessionMoney += money;
+  }
+
+  void bet(int money){
+    if (money<=0){
+      //throw InvalidBetAmountException
+    }
+    if(_sessionMoney - money <0){
+      // throw NotEnoughMoneyException
+    }
+    _sessionMoney -= money;
+    _totalMoneyBetted += money;
+  }
 
   @override
   String toString() {
