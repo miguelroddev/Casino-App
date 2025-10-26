@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:casino_app/core/exceptions/no_such_player_exception.dart';
 import 'package:casino_app/core/player/player.dart';
 
-class casino {
+class Casino {
   Map<int, Player> mapPlayers = new HashMap();
 
 
