@@ -8,4 +8,6 @@ class Session {
 
   //getters
   Game get game => _game;
+
+
 }

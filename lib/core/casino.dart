@@ -6,6 +6,7 @@ import 'package:casino_app/core/player/player.dart';
 
 class Casino {
   int _casinoProfit = 0;
+  int _sessionID = 0;
   Date _date = new Date(1);
   Map<int, Player> mapPlayers = new HashMap();
 
@@ -13,6 +14,7 @@ class Casino {
 
   //getter
   Date get date => _date;
+  int get sessionID => _sessionID;
   int get casinoProfit => _casinoProfit;
 
   Player getPlayer(int idPlayer){
@@ -20,6 +22,10 @@ class Casino {
       throw NoSuchPlayerException(idPlayer);
     }
     return mapPlayers[idPlayer]!;
+  }
+
+  void increaseSessionID(){
+    _sessionID+=1;
   }
 
   void increaseProfit(int money){

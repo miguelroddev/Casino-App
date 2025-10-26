@@ -5,7 +5,7 @@ class DoShowProfit {
   
   void execute(CasinoManager casinoManager){
     if(isConsoleMode){
-      print("The casino profit is: ${casinoManager.getCasinoProfit()}");
+      print("The casino profit is: ${casinoManager.casinoProfit}");
     }
   }
 }

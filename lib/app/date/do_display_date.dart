@@ -7,7 +7,7 @@ class DoDisplayDate {
 
   void execute(CasinoManager casinoManager){
     if (isConsoleMode){
-      print("The current date is: ${casinoManager.getDate().day}");
+      print("The current date is: ${casinoManager.date.day}");
     }
   }
 

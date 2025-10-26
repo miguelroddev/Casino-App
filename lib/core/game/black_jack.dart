@@ -5,13 +5,16 @@ import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
+import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
 
 class BlackJack extends Game{
   late Deck _deck;
 
-  BlackJack(BlackJackRound round, int numDecks) : super(GameType.BLACK_JACK, round){
+  BlackJack(int numDecks, Set<Player> players) : super(GameType.BLACK_JACK){
     _deck = generateBlackjackDeck(numDecks);
+    BlackJackRound round = BlackJackRound(1, this, players);
+    setRound(round);
   }
 
   //getter

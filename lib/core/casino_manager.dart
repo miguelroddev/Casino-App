@@ -7,18 +7,19 @@ class CasinoManager {
 
   CasinoManager(this._casino);
 
+  //getters
   Casino get casino => _casino;
+  Date get date => _casino.date;
+  int get sessionID => _casino.sessionID;
+  int get casinoProfit => _casino.casinoProfit;
 
-  Date getDate(){
-    return _casino.date;
-  }
-
-  int getCasinoProfit(){
-    return _casino.casinoProfit;
-  }
 
   Player getPlayer(int idPlayer){
     return _casino.getPlayer(idPlayer);
+  }
+
+  void increaseSessionID(){
+    _casino.increaseSessionID();
   }
 
   void changeDate(int days){

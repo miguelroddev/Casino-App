@@ -16,6 +16,7 @@ class BlackJackRound extends Round{
   //getters
   List<Hand> get dealer => _dealer;
 
+
   // takeCard != Hit, takeCard is automatic/beggining of the round
 
   takeCard(int idOfPlayer){

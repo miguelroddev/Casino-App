@@ -15,7 +15,7 @@ class DoAdvanceDate {
         //throw InvalidDateException
       }
       casinoManager.changeDate(days!);
-      print("The new date is: ${casinoManager.getDate().day}");
+      print("The new date is: ${casinoManager.date.day}");
     }
   }
 }
