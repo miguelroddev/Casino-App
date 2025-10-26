@@ -1,5 +1,6 @@
 import 'package:casino_app/core/casino.dart';
 import 'package:casino_app/core/date/date.dart';
+import 'package:casino_app/core/player/player.dart';
 
 class CasinoManager {
   Casino _casino;
@@ -14,6 +15,10 @@ class CasinoManager {
 
   int getCasinoProfit(){
     return _casino.casinoProfit;
+  }
+
+  Player getPlayer(int idPlayer){
+    return _casino.getPlayer(idPlayer);
   }
 
   void changeDate(int days){

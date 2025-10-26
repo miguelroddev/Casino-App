@@ -25,7 +25,11 @@ class Menu {
       final index = int.tryParse(input ?? '') ?? -1;
 
       if (index >= 1 && index <= options.length) {
-        options[index - 1].action(casinoManager);
+        try{
+          options[index - 1].action(casinoManager);
+        } catch(e){
+          print(e.toString());
+        }
       } else if (index == 0) {
         print('Exiting $title...');
         return; // the return here will either exit the submenu or the code
