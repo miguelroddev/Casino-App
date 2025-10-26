@@ -11,4 +11,13 @@ class CasinoManager {
   Date getDate(){
     return _casino.date;
   }
+
+  int getCasinoProfit(){
+    return _casino.casinoProfit;
+  }
+
+  void changeDate(int days){
+    _casino.changeDate(days);
+  }
+
 }

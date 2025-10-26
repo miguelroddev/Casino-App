@@ -15,7 +15,7 @@ class Menu {
       for (int i = 0; i < options.length; i++) {
         print('${i + 1}. ${options[i].label}');
       }
-      print('${options.length + 1}. Exit');
+      print('0. Exit');
       stdout.write('Choose an option: ');
       final input = stdin.readLineSync();
 
@@ -26,7 +26,7 @@ class Menu {
 
       if (index >= 1 && index <= options.length) {
         options[index - 1].action(casinoManager);
-      } else if (index == options.length + 1) {
+      } else if (index == 0) {
         print('Exiting $title...');
         return; // the return here will either exit the submenu or the code
       } else {
