@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:casino_app/core/casino_manager.dart';
+
 import 'menu_option.dart';
 
 class Menu {
@@ -7,7 +9,7 @@ class Menu {
 
   Menu({required this.title, required this.options});
 
-  void start() {
+  void start(CasinoManager casinoManager) {
     while (true) {
       print('\n=== $title ===');
       for (int i = 0; i < options.length; i++) {
@@ -23,7 +25,7 @@ class Menu {
       final index = int.tryParse(input ?? '') ?? -1;
 
       if (index >= 1 && index <= options.length) {
-        options[index - 1].action();
+        options[index - 1].action(casinoManager);
       } else if (index == options.length + 1) {
         print('Exiting $title...');
         return; // the return here will either exit the submenu or the code
