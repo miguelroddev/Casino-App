@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/ranks.dart';

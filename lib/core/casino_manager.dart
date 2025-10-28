@@ -18,6 +18,14 @@ class CasinoManager {
     return _casino.getPlayer(idPlayer);
   }
 
+  List<Player> getAllPlayers(){
+    return _casino.getAllPlayers();
+  }
+
+  Player createPlayer(String username, String email, String password){
+    return _casino.createPlayer(username, email, password);
+  }
+
   void increaseSessionID(){
     _casino.increaseSessionID();
   }

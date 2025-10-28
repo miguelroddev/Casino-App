@@ -11,23 +11,26 @@ class DoPlayBlackJack {
   void execute(CasinoManager casinoManager){
     if (isConsoleMode) {
       stdout.write("Insert Player ID: ");
-      String? input = stdin.readLineSync();
-      int? playerID = int.tryParse(input ?? '');
-      if (playerID == null || playerID <= 0){
+      String? _input = stdin.readLineSync();
+      int? _playerID = int.tryParse(_input ?? '');
+      if (_playerID == null || _playerID <= 0){
       //throw InvalidPlayerIdException
       }
-      Player player = casinoManager.getPlayer(playerID!);
+      Player player = casinoManager.getPlayer(_playerID!);
       
       stdout.write("Insert Number of Decks: ");
-      String? input2 = stdin.readLineSync();
-      int? numDecks = int.tryParse(input ?? '');
-      if (numDecks == null || numDecks <= 0){
+      String? _input2 = stdin.readLineSync();
+      int? _numDecks = int.tryParse(_input2 ?? '');
+      if (_numDecks == null || _numDecks <= 0){
       //throw InvalidNumberOfDecksException
       //maybe I should also check if they are whole numbers
       }
-      Set<Player> players = new HashSet();
-      players.add(player);
-      BlackJack game = BlackJack(numDecks!, players); 
+      Set<Player> _players = new HashSet();
+      _players.add(player);
+      BlackJack _game = BlackJack(_numDecks!, _players); 
+      // while (game.checkGameEnd() == false){
+        
+      // }
 
     } //else flutter logic 
 
