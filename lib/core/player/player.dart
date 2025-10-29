@@ -29,7 +29,7 @@ class Player{
     _bankroll += _sessionMoney;
     _sessionMoney = 0;
   }
-
+  void increaseSessionMoneyFromBe
   void addSessionMoney(int money){
     if (money <= 0){
       //throw InvalidMoneyAmountException

@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/game/bj_end_state.dart';
+import 'package:casino_app/core/game/bj_start_round_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
@@ -25,12 +27,18 @@ class DoPlayBlackJack {
       //throw InvalidNumberOfDecksException
       //maybe I should also check if they are whole numbers
       }
+      
       Set<Player> _players = new HashSet();
       _players.add(player);
       BlackJack _game = BlackJack(_numDecks!, _players); 
-      // while (game.checkGameEnd() == false){
-        
-      // }
+      _game.updateGameState(BJStartRoundState(_game));
+      while (true){
+        _game.gameState!.execute();
+        if (_game.gameState is BJEndState){
+          break;
+        }
+      }
+      print("GAME HAS ENDED");
 
     } //else flutter logic 
 

@@ -3,6 +3,7 @@ import 'package:casino_app/core/card/deck.dart';
 import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
+import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/player/player.dart';
@@ -10,6 +11,7 @@ import 'package:casino_app/core/round/bj21_round.dart';
 
 class BlackJack extends Game{
   late Deck _deck;
+  BJGameState? _gameState;
 
   BlackJack(int numDecks, Set<Player> players) : super(GameType.BLACK_JACK){
     _deck = generateBlackjackDeck(numDecks);
@@ -19,6 +21,7 @@ class BlackJack extends Game{
 
   //getter
   Deck get deck => _deck;
+  BJGameState? get gameState => _gameState;
 
   void endGame(){}
   void checkGameEnd(){}
@@ -55,6 +58,10 @@ class BlackJack extends Game{
       case Rank.KING:
         return 10;
     }
+  }
+
+  void updateGameState(BJGameState gameState){
+    _gameState = gameState;
   }
 
   Deck generateBlackjackDeck(int numDecks) {
