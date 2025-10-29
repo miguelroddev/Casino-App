@@ -29,6 +29,11 @@ class BlackJack extends Game{
     
   }
 
+  void removePlayer(int playerID) {
+    round.players.removeWhere((player) => player.idPlayer == playerID);
+  }
+
+
   int getValue(Rank rank){
     switch (rank) {
       case Rank.ACE:

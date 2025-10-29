@@ -31,6 +31,10 @@ class BlackJackRound extends Round{
     }
   }
 
+  void removePlayer(int playerID) {
+    players.removeWhere((player) => player.idPlayer == playerID);
+  }
+
   void bet(Player player, int money){
     player.bet(money);
   }

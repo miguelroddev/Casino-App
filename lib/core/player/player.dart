@@ -25,11 +25,28 @@ class Player{
     _bankroll += money;
   }
 
-  void endSession(){
+  void clearBet(){
+    _sessionMoney += _totalMoneyBetted;
+    _totalMoneyBetted = 0;
+  }
+
+  void addBet(int money){
+    if (money<= 0){
+      //throw InvalidMoneyAmountException
+    }
+    if (_sessionMoney - money <0){
+      // throw NotEnoughMoneyException
+    }
+    _sessionMoney -= money;
+    _totalMoneyBetted += money;
+  }
+
+  void finishSession(){
+    clearBet();
     _bankroll += _sessionMoney;
     _sessionMoney = 0;
   }
-  void increaseSessionMoneyFromBe
+
   void addSessionMoney(int money){
     if (money <= 0){
       //throw InvalidMoneyAmountException

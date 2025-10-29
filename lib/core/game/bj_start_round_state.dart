@@ -1,5 +1,7 @@
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
+import 'package:casino_app/core/game/bj_player_decision_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/options_start_round.dart';
 import 'dart:io';
@@ -14,18 +16,48 @@ class BJStartRoundState extends BJGameState{
   @override
   void execute(){
     if (isConsoleMode){
-      bool invalido = true;
-      for (Player player in _game.round.players){
-       do {
-        OptionsStartRound? _option;
-        stdout.write("Available Options for ${player.username}:\n " +
-        "1. Clear\n" + "2. Add Bet" + "3. Confirm\n" + "4. Exit\n");
-        String? input = stdin.readLineSync();
-        if (input == "1"){
-          int onTableAmount = player.totalMoneyBetted
-          player.increaseSess();
-        }
-        } while (invalido == true); 
+      List<Player> toRemove = [];
+      for (Player player in _game.getPlayers){
+        bool invalido = true;
+        do {
+          OptionsStartRound? _option;
+          stdout.write("Available Options for ${player.username}:\n" +
+          "1. Clear\n" + "2. Add Bet\n" + "3. Confirm\n" + "0. Exit\n");
+          String? input = stdin.readLineSync();
+          if (input == "1"){
+            player.clearBet();
+          }
+          else if (input == "2"){
+            stdout.write("Insert Amount to Bet: ");
+            String? input2 = stdin.readLineSync();
+            int? _money = int.tryParse(input2 ?? '');
+            if (_money == null){
+              //throw InvalidNumberException
+            }
+            player.addBet(_money!);
+            print("Current Session money:"+ player.totalMoneyBetted.toString());
+          }
+          else if (input == "3"){
+            invalido = false;
+          }
+          else if (input == "0"){
+            invalido = false;
+            player.finishSession();
+            toRemove.add(player);
+          }
+          else {
+            print("Invalid option. Please try again.");
+          }
+        } while (invalido == true);
+      }
+      for (Player player in toRemove) {
+        _game.removePlayer(player.idPlayer);
+      }
+      if (_game.getPlayers.isEmpty){
+        _game.updateGameState(BJEndState(_game));
+      }
+      else{
+        _game.updateGameState(BJPlayerDecisionState(_game));
       }
     }
   }

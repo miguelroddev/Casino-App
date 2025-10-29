@@ -25,9 +25,14 @@ class DoPlayBlackJack {
       int? _numDecks = int.tryParse(_input2 ?? '');
       if (_numDecks == null || _numDecks <= 0){
       //throw InvalidNumberOfDecksException
-      //maybe I should also check if they are whole numbers
       }
-      
+      stdout.write("Insert Cash-in Value: ");
+      String? _input3 = stdin.readLineSync();
+      int? _sessionMoney = int.tryParse(_input3 ?? '');
+      if (_sessionMoney == null || _sessionMoney <= 0){
+      //throw InvalidMoneyAmountException
+      }
+      player.addSessionMoney(_sessionMoney!);
       Set<Player> _players = new HashSet();
       _players.add(player);
       BlackJack _game = BlackJack(_numDecks!, _players); 

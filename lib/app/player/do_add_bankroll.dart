@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
 
-class DoShowPlayer {
+class DoAddBankroll {
   void execute(CasinoManager casinoManager){
     print("Insert PlayerID: ");
     String? _input = stdin.readLineSync();
@@ -12,6 +12,12 @@ class DoShowPlayer {
       //throw InvalidPlayerIDException
     }
     Player player = casinoManager.getPlayer(_playerID!);
-    print(player.toString());
+    print("Insert Amount: ");
+    String? _input2 = stdin.readLineSync();
+    int? _money = int.tryParse(_input2 ?? '');
+    if (_money == null || _money <= 0){
+      //throw InvalidMoneyAmountException
+    }
+    player.increaseBankRoll(_money!);
   }
 }
