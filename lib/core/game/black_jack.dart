@@ -8,6 +8,7 @@ import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
+import 'package:casino_app/core/round/round.dart';
 
 class BlackJack extends Game{
   late Deck _deck;
@@ -20,9 +21,12 @@ class BlackJack extends Game{
   }
 
   //getter
+  @override
+  BlackJackRound get round => super.round as BlackJackRound;
   Deck get deck => _deck;
   BJGameState? get gameState => _gameState;
 
+  
   void endGame(){}
   void checkGameEnd(){}
   void startRound(){
@@ -33,6 +37,10 @@ class BlackJack extends Game{
     round.players.removeWhere((player) => player.idPlayer == playerID);
   }
 
+
+  Card getCardFromDeck(){
+    return deck.takeCard();
+  }
 
   int getValue(Rank rank){
     switch (rank) {

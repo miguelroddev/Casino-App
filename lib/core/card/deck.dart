@@ -14,11 +14,11 @@ class Deck {
   int get remainingCards => _cardsAtuais.length;
 
   Card takeCard() {
-  Card temp = _cardsAtuais.last;
-  _cardsUsadas.add(temp);
-  _cardsAtuais.removeLast();
-  return temp;
-}
+    Card temp = _cardsAtuais.last;
+    _cardsUsadas.add(temp);
+    _cardsAtuais.removeLast();
+    return temp;
+  }
 
   void resetDeck(){
     for (Card card in _cardsUsadas){
