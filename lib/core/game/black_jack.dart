@@ -102,8 +102,7 @@ class BlackJack extends Game{
     return deck;
   }
 
-  int calculateHand(Hand hand){
-    List<Card> cards = hand.cards;
+  int calculateHand(List<Card> cards){
     if (cards.isEmpty){
       //throw NoCardInHandException
     }

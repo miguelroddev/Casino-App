@@ -18,4 +18,17 @@ enum SuitType{
         return "Spades";
     }
   }
+
+  String toPicture(){
+    switch (this) {
+      case SuitType.HEARTS:
+        return "♥";
+      case SuitType.DIAMONDS:
+        return "♦";
+      case SuitType.CLUBS:
+        return "♣";
+      case SuitType.SPADES:
+        return "♠";
+    }
+  }
 }

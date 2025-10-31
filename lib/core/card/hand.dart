@@ -16,4 +16,27 @@ class Hand {
     _cards.add(card);
   }
 
+  void printHand() {
+    if (_cards.isEmpty) {
+      //throw IsEmptyException
+    }
+
+    final cardLines = _cards.map((card) {
+      final rankStr = card.rank.toString();  
+      final suitStr = card.suit.toPicture();
+
+      return [
+        "┌─────────┐",
+        "│$rankStr${rankStr.length == 1 ? ' ' : ''}       │",
+        "│    $suitStr    │",
+        "│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│",
+        "└─────────┘",
+      ];
+    }).toList();
+
+    for (int i = 0; i < cardLines[0].length; i++) {
+      print(cardLines.map((lines) => lines[i]).join(" "));
+    }
+  }
+
 }

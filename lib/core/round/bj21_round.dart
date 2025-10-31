@@ -83,4 +83,38 @@ class BlackJackRound extends Round{
     return _mapPlayerHand[idPlayer]!;
   }
   
+  void printHands(List<Hand> Hands){
+    int i =1;
+    for (Hand hand in Hands){
+      print("Hand number $i: ");
+      hand.printHand();
+      i++;
+    }
+  }
+
+  void printDealer({bool revealHidden = false}) {
+    print("\nDealer's cards:");
+
+    if (_dealer.isEmpty && _dealerHiddenCard == null) {
+      //throw NoCardsInHandException
+    }
+    final visibleCards = List<Card>.from(_dealer);
+
+    final cardLines = visibleCards.map((card) {
+      final rankStr = card.rank.toString();
+      final suitStr = card.suit.toPicture();
+
+      return [
+        "┌─────────┐",
+        "│$rankStr${rankStr.length == 1 ? ' ' : ''}       │",
+        "│    $suitStr    │",
+        "│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│",
+        "└─────────┘",
+      ];
+    }).toList();
+
+    for (int i = 0; i < cardLines[0].length; i++) {
+      print(cardLines.map((lines) => lines[i]).join(" "));
+    }
+  }
 }

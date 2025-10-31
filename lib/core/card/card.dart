@@ -14,4 +14,17 @@ class Card{
   void changeValue(int number){
     _value = value;
   }
+
+  void toCommandPrint() {
+    final rankStr = rank.toString();
+    final suitStr = suit.toPicture();
+
+    print('''
+┌─────────┐
+│$rankStr${rankStr.length == 1 ? ' ' : ''}       │
+│    $suitStr    │
+│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│
+└─────────┘
+''');
+  }
 }
