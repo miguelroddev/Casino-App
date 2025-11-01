@@ -25,6 +25,10 @@ class Player{
     _bankroll += money;
   }
 
+  void confirmBetToHand(){
+    
+  }
+
   void clearBet(){
     _sessionMoney += _totalMoneyBetted;
     _totalMoneyBetted = 0;
@@ -47,8 +51,8 @@ class Player{
     _sessionMoney = 0;
   }
 
-  void clearTotalMoneyBetter(){
-    _totalMoneyBetted;
+  void clearTotalMoneyBetted(){
+    _totalMoneyBetted = 0;
   }
 
   void finishRoundNormalWin(){}
@@ -62,6 +66,12 @@ class Player{
     }
     _bankroll -= money;
     _sessionMoney += money;
+  }
+
+  void payoutUpdate(double money){
+    _sessionMoney += money + _totalMoneyBetted;
+    _totalProfit += money;
+    _totalMoneyBetted = 0;
   }
 
   void addTotalProfit(double money){

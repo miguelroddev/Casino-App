@@ -16,10 +16,12 @@ import 'package:casino_app/core/round/round.dart';
 class BlackJack extends Game{
   late Deck _deck;
   BJGameState? _gameState;
+  int _roundID = 1;
 
   BlackJack(int numDecks, Set<Player> players) : super(GameType.BLACK_JACK){
     _deck = generateBlackjackDeck(numDecks);
-    BlackJackRound round = BlackJackRound(1, this, players);
+    BlackJackRound round = BlackJackRound(_roundID, this, players);
+    _roundID++;
     setRound(round);
   }
 
@@ -30,7 +32,12 @@ class BlackJack extends Game{
   BJGameState? get gameState => _gameState;
 
   
-  void endGame(){}
+  void endGame(){
+    Set<Player> _players = super.round.players;
+    BlackJackRound round = BlackJackRound(_roundID, this, _players);
+    _roundID++;
+    setRound(round);
+  }
   void checkGameEnd(){}
   void startRound(){
     
@@ -129,17 +136,32 @@ class BlackJack extends Game{
     return sum;
   }
 
+  void applyPlayerBetsToHands() {
+    for (Player player in round.players) {
+      final hands = round.getHands(player.idPlayer);
+
+      if (hands.isEmpty) {
+        round.addCardToMap(player.idPlayer, getCardFromDeck());
+        hands[0].cards.clear();
+      }
+
+      //we are assuming the player can only have 1 hand in each Round tobefixed
+      final Hand hand = hands.first;
+      hand.addBet(player.totalMoneyBetted);
+    }
+  }
+
   void settleRound(int dealerValue){
+    print("settleRound Dealer Value: $dealerValue");
     for (Player player in round.players) {
       double sumPayout = 0;
       for (Hand hand in round.getHands(player.idPlayer)) {
         sumPayout += hand.payout(dealerValue);
       }
-      double diff = sumPayout + player.totalMoneyBetted;
-      player.addSessionMoney(diff);
-      player.addTotalProfit(diff);
+      print("The payout was $sumPayout");
+      player.payoutUpdate(sumPayout);
       if (isConsoleMode){
-        print("The player ${player.username} won a net value of $diff");
+        print("The player ${player.username} won a net value of $sumPayout");
       }
       player.clearBet();
     }
@@ -155,6 +177,16 @@ class BlackJack extends Game{
       for (int i = 0; i < round.getHands(player.idPlayer).length; i++) {
         Hand hand = round.getHands(player.idPlayer)[i];
         bool stand = false;
+
+        if (hand.cards.length == 2 && hand.value == 21){
+          double payout = hand.payout(0); // if it reaches here it means the dealer doesn't have BJ
+          player.payoutUpdate(payout);
+          round.removeHand(player.idPlayer, hand);
+          if (isConsoleMode) {
+            print("BLACKJACK for ${player.username}! Instant payout of $payout");
+          }
+          break;
+        }
 
         while (!stand && hand.value < 21) {
           if (isConsoleMode){
@@ -213,6 +245,7 @@ class BlackJack extends Game{
           }
           if (hand.value == 21){
             stand = true;
+            hand.printHand();
           }
         }
       }

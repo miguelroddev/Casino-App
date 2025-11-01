@@ -29,16 +29,21 @@ class Hand {
   }
 
   double payout(int dealerValue,){
+    print(betAmount);
     if (_cards.length == 2 && _value ==21 && dealerValue<21){
+      print("Chegou aqui! #1");
       return betAmount*(3/2);
     }
-    else if(value > dealerValue){
+    else if((_value > dealerValue && _value <=21) || dealerValue > 21){
+      print("Chegou aqui! #2");
       return betAmount;
     }
-    else if(value == dealerValue){
+    else if(_value == dealerValue){
+      print("Chegou aqui! #3");
       return 0;
     }
     else{
+      print("Chegou aqui! #4");
       return -(betAmount);
     }
   }

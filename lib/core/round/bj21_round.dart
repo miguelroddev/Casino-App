@@ -78,8 +78,10 @@ class BlackJackRound extends Round{
   }
 
   void revealDealerHiddenCard(){
-    _dealer.add(_dealerHiddenCard!);
-    _dealerHiddenCard = null;
+    if (_dealerHiddenCard == null){
+      _dealer.add(_dealerHiddenCard!);
+      _dealerHiddenCard = null;
+    }
   }
 
   void splitHand(int playerID, int handIndex) {
@@ -130,7 +132,23 @@ class BlackJackRound extends Round{
     }
   }
 
-  void printDealer({bool revealHidden = false}) {
+  void removeHand(int playerID, Hand hand) {
+    if (!_mapPlayerHand.containsKey(playerID)) {
+      // throw PlayerNotInRoundException
+    }
+
+    _mapPlayerHand[playerID]!.remove(hand);
+
+    if (_mapPlayerHand[playerID]!.isEmpty) {
+      _mapPlayerHand.remove(playerID);
+    }
+
+    if (isConsoleMode) {
+      print("Removed a completed hand for player $playerID.");
+    }
+  }
+
+  void printDealer() {
     print("\nDealer's cards:");
 
     if (_dealer.isEmpty && _dealerHiddenCard == null) {
