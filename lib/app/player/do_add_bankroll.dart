@@ -14,7 +14,7 @@ class DoAddBankroll {
     Player player = casinoManager.getPlayer(_playerID!);
     print("Insert Amount: ");
     String? _input2 = stdin.readLineSync();
-    int? _money = int.tryParse(_input2 ?? '');
+    double? _money = double.tryParse(_input2 ?? '');
     if (_money == null || _money <= 0){
       //throw InvalidMoneyAmountException
     }

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/hand.dart';
+import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/player/player.dart';
@@ -24,7 +25,7 @@ class BlackJackRound extends Round{
 
   // takeCard != Hit, takeCard is automatic/beggining of the round
 
-  takeCard(int idOfPlayer){
+  void takeCard(int idOfPlayer){
     bool idExists = false;
     Player _player;
     for (Player player in players){
@@ -59,12 +60,17 @@ class BlackJackRound extends Round{
     hands[handIndex].addCard(card);
   }
 
-  void bet(Player player, int money){
+  void bet(Player player, double money){
     player.bet(money);
   }
 
   void addDealerCard(){
     _dealer.add(game.getCardFromDeck());
+  }
+
+  void removeHiddenCard(){
+    _dealer.add(_dealerHiddenCard!);
+    _dealerHiddenCard = null;
   }
 
   void addDealerHiddenCard(){
@@ -75,6 +81,38 @@ class BlackJackRound extends Round{
     _dealer.add(_dealerHiddenCard!);
     _dealerHiddenCard = null;
   }
+
+  void splitHand(int playerID, int handIndex) {
+    List<Hand> hands = _mapPlayerHand[playerID]!;
+
+    if (handIndex < 0 || handIndex >= hands.length) {
+      // throw InvalidHandIndexException
+    }
+    Hand original = hands[handIndex];
+    if (original.cards.length != 2 ||
+        original.cards[0].value != original.cards[1].value) {
+      // throw InvalidSplitException
+    }
+    Card splitCard = original.cards.removeLast();
+    Hand newHand = Hand(playerID);
+    newHand.addCard(splitCard);
+
+    //Each Hand gets one new card from the deck
+    original.addCard(game.getCardFromDeck());
+    newHand.addCard(game.getCardFromDeck());
+
+    // Insert the new hand right after the original one
+    hands.insert(handIndex + 1, newHand);
+
+    if (isConsoleMode) {
+      print("Split successful! New hands:");
+      for (int i = 0; i < hands.length; i++) {
+        print("Hand number ${i + 1}:");
+        hands[i].printHand();
+      }
+    }
+  }
+
 
   List<Hand> getHands(int idPlayer){
     if (_mapPlayerHand[idPlayer] == null){

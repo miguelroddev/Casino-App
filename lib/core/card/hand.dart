@@ -6,14 +6,65 @@ import 'package:casino_app/core/card/ranks.dart';
 class Hand {
   final int idPlayer;
   List<Card> _cards = [];
+  int _value = 0;
+  double _betAmount = 0;
 
   Hand(this.idPlayer);
 
   //getters
   List<Card> get cards => _cards;
+  int get value => _value;
+  double get betAmount => _betAmount;
 
   void addCard(Card card){
     _cards.add(card);
+    _value = calculateHand(_cards);
+  }
+  
+  void addBet(double money){
+    if (money<=0){
+      //throw invalidMoneyAmountException
+    }
+    _betAmount += money;
+  }
+
+  double payout(int dealerValue,){
+    if (_cards.length == 2 && _value ==21 && dealerValue<21){
+      return betAmount*(3/2);
+    }
+    else if(value > dealerValue){
+      return betAmount;
+    }
+    else if(value == dealerValue){
+      return 0;
+    }
+    else{
+      return -(betAmount);
+    }
+  }
+
+  int calculateHand(List<Card> cards){
+    if (cards.isEmpty){
+      //throw NoCardInHandException
+    }
+    int sum = 0;
+    int numAce = 0;
+    for (Card card in cards){
+      if(card.rank == Rank.ACE){
+        numAce += 1;
+      }else{
+        sum += card.value;
+      }
+    }
+    if(numAce>0){
+      if (sum +11 + numAce -1 <= 21){ //there can never be 2 Aces with the value of 11
+        return sum +11 + numAce -1;
+      }
+      else{
+        return sum + numAce;
+      }
+    }
+    return sum;
   }
 
   void printHand() {

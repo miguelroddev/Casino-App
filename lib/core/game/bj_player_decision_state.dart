@@ -4,7 +4,9 @@ import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/deck.dart';
 import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
+import 'package:casino_app/core/game/bj_payout_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
@@ -45,7 +47,22 @@ class BJPlayerDecisionState extends BJGameState{
     }
 
     //check BlackJack
-    
-    calculateHand()
+    List<Card> temp = _bjRound.dealer;
+    temp.add(_bjRound.dealerHiddenCard!);
+    int _valueDealer = _game.calculateHand(temp);
+    if (_valueDealer == 21){
+      if (_bjRound.dealerHiddenCard != null){
+        _bjRound.removeHiddenCard();
+        if(isConsoleMode){
+          _bjRound.printDealer();
+        }
+      }
+      _game.settleRound(_valueDealer);
+      _game.updateGameState(BJEndState(_game));
+    }
+    else{
+      _game.playerDecisions();
+    }
+    _game.updateGameState(BJPayoutState(_game));
   }
 }

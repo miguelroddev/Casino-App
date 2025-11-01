@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/deck.dart';
 import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
+import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
@@ -125,6 +128,97 @@ class BlackJack extends Game{
     }
     return sum;
   }
+
+  void settleRound(int dealerValue){
+    for (Player player in round.players) {
+      double sumPayout = 0;
+      for (Hand hand in round.getHands(player.idPlayer)) {
+        sumPayout += hand.payout(dealerValue);
+      }
+      double diff = sumPayout + player.totalMoneyBetted;
+      player.addSessionMoney(diff);
+      player.addTotalProfit(diff);
+      if (isConsoleMode){
+        print("The player ${player.username} won a net value of $diff");
+      }
+      player.clearBet();
+    }
+  }
+
+  void playerDecisions() {
+    BlackJackRound round = this.round;
+    for (Player player in round.players) {
+      if (isConsoleMode){
+        print("\n--- ${player.username}'s turn ---");
+      }
+
+      for (int i = 0; i < round.getHands(player.idPlayer).length; i++) {
+        Hand hand = round.getHands(player.idPlayer)[i];
+        bool stand = false;
+
+        while (!stand && hand.value < 21) {
+          if (isConsoleMode){
+            print("\nCurrent hand value: ${hand.value}");
+            hand.printHand();
+            stdout.write("\nOptions: (H)it, (S)tand, (D)ouble, (P)Split (if possible): ");
+            String? choice = stdin.readLineSync()?.toUpperCase();
+            switch (choice) {
+              case "H": // Hit
+                Card newCard = getCardFromDeck();
+                hand.addCard(newCard);
+                print("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}");
+                break;
+
+              case "S": // Stand
+                stand = true;
+                break;
+
+              case "D": // Double down
+                if (player.sessionMoney >= hand.betAmount) {
+                  player.addBet(hand.betAmount);
+                  hand.addCard(getCardFromDeck());
+                  if (isConsoleMode) {
+                    hand.printHand();
+                  }
+                  stand = true;
+                } else {
+                  //throw NotEnoughMoneyException
+                }
+                break;
+
+              case "P": // Split
+                if (hand.cards.length == 2 &&
+                    hand.cards[0].value == hand.cards[1].value) {
+                  player.addBet(hand.betAmount); // second bet
+                  round.splitHand(player.idPlayer, i);
+                  print("Hand split!");
+                } else {
+                  if (isConsoleMode){
+                    print("You can't split this hand.");
+                  }
+                }
+                break;
+
+              default:
+                if (isConsoleMode){
+                  print("invalid Option");
+                }
+            }
+          }
+          
+          if (hand.value > 21) {
+            if (isConsoleMode){
+              print("BUSTED! (${hand.value})");
+            }
+          }
+          if (hand.value == 21){
+            stand = true;
+          }
+        }
+      }
+    }
+  }
+
 
   Card changeAceValue(Card ace){ // useless method? maybe.
     if (ace.rank != Rank.ACE){

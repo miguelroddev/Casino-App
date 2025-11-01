@@ -28,7 +28,7 @@ class DoPlayBlackJack {
       }
       stdout.write("Insert Cash-in Value: ");
       String? _input3 = stdin.readLineSync();
-      int? _sessionMoney = int.tryParse(_input3 ?? '');
+      double? _sessionMoney = double.tryParse(_input3 ?? '');
       if (_sessionMoney == null || _sessionMoney <= 0){
       //throw InvalidMoneyAmountException
       }

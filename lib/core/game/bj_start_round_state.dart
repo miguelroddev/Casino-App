@@ -1,4 +1,5 @@
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/game/bj_dealer_play_state.dart';
 import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/bj_player_decision_state.dart';
@@ -30,7 +31,7 @@ class BJStartRoundState extends BJGameState{
           else if (input == "2"){
             stdout.write("Insert Amount to Bet: ");
             String? input2 = stdin.readLineSync();
-            int? _money = int.tryParse(input2 ?? '');
+            double? _money = double.tryParse(input2 ?? '');
             if (_money == null){
               //throw InvalidNumberException
             }

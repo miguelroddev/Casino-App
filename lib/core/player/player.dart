@@ -7,21 +7,21 @@ class Player{
   final String email;
   final String password;
   PlayerType _playerType = PlayerType.NORMAL;
-  int _bankroll = 0;
-  int _sessionMoney = 0; // maybe remove this
-  int _totalProfit = 0;
-  int _totalMoneyBetted = 0;
+  double _bankroll = 0;
+  double _sessionMoney = 0; // maybe remove this
+  double _totalProfit = 0;
+  double _totalMoneyBetted = 0;
 
   Player(this.idPlayer, this.username, this.email, this.password){}
 
   // getters
   PlayerType get playerType => _playerType;
-  int get bankroll => _bankroll;
-  int get sessionMoney => _sessionMoney;
-  int get totalProfit => _totalProfit;
-  int get totalMoneyBetted => _totalMoneyBetted;
+  double get bankroll => _bankroll;
+  double get sessionMoney => _sessionMoney;
+  double get totalProfit => _totalProfit;
+  double get totalMoneyBetted => _totalMoneyBetted;
 
-  void increaseBankRoll(int money){
+  void increaseBankRoll(double money){
     _bankroll += money;
   }
 
@@ -30,7 +30,7 @@ class Player{
     _totalMoneyBetted = 0;
   }
 
-  void addBet(int money){
+  void addBet(double money){
     if (money<= 0){
       //throw InvalidMoneyAmountException
     }
@@ -47,7 +47,13 @@ class Player{
     _sessionMoney = 0;
   }
 
-  void addSessionMoney(int money){
+  void clearTotalMoneyBetter(){
+    _totalMoneyBetted;
+  }
+
+  void finishRoundNormalWin(){}
+
+  void addSessionMoney(double money){
     if (money <= 0){
       //throw InvalidMoneyAmountException
     }
@@ -58,7 +64,11 @@ class Player{
     _sessionMoney += money;
   }
 
-  void bet(int money){
+  void addTotalProfit(double money){
+    _totalProfit += money;
+  }
+
+  void bet(double money){
     if (money<=0){
       //throw InvalidBetAmountException
     }
