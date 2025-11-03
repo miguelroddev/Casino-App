@@ -157,10 +157,13 @@ class BlackJack extends Game{
   void settleRound(int dealerValue){
     for (Player player in round.players) {
       double sumPayout = 0;
-      int handIndex = 1;
+      int handIndex = 0;
       for (Hand hand in round.getHands(player.idPlayer)) {
         sumPayout += hand.payout(dealerValue);
         handIndex++;
+        /* 
+          maybe print("The player ${player.username} won hand.payout(dealerValue); in hand numer $handIndex €");
+        */
       }
       player.payoutUpdate(sumPayout);
       if (isConsoleMode){

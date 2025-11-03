@@ -31,5 +31,6 @@ class BJDealerPlayState extends BJGameState{
     _game.settleRound(_game.calculateHand(_bjRound.dealer)); // already does the payout automatically
     _game.endGame();
     _game.updateGameState(BJStartRoundState(_game));
+    
   }
 }

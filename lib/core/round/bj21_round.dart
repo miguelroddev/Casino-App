@@ -5,6 +5,7 @@ import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/exceptions/invalid_hand_index_exception.dart';
 import 'package:casino_app/core/exceptions/invalid_split_exception.dart';
+import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
 import 'package:casino_app/core/exceptions/player_not_in_round_exception.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/game.dart';
@@ -122,7 +123,7 @@ class BlackJackRound extends Round{
 
   List<Hand> getHands(int idPlayer){
     if (_mapPlayerHand[idPlayer] == null){
-      //throw PlayerNotInRoundException
+      throw PlayerNotInRoundException(idPlayer);
     }
     return _mapPlayerHand[idPlayer]!;
   }
@@ -168,7 +169,7 @@ class BlackJackRound extends Round{
     print("\nDealer's cards:");
 
     if (_dealer.isEmpty && _dealerHiddenCard == null) {
-      //throw NoCardsInHandException
+      throw NoCardInHandException();
     }
     final visibleCards = List<Card>.from(_dealer);
 

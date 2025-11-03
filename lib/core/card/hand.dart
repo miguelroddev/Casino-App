@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/ranks.dart';
+import 'package:casino_app/core/exceptions/invalid_money_amount_exception.dart';
+import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
 
 class Hand {
   final int idPlayer;
@@ -23,7 +25,7 @@ class Hand {
   
   void addBet(double money){
     if (money<=0){
-      //throw invalidMoneyAmountException
+      throw InvalidMoneyAmountException(money);
     }
     _betAmount += money;
   }
@@ -45,7 +47,7 @@ class Hand {
 
   int calculateHand(List<Card> cards){
     if (cards.isEmpty){
-      //throw NoCardInHandException
+      throw NoCardInHandException();
     }
     int sum = 0;
     int numAce = 0;

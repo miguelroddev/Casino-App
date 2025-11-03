@@ -19,6 +19,7 @@ class BJPlayerDecisionState extends BJGameState{
 
   @override
   void execute(){
+    
     BlackJackRound _bjRound = _game.round;
     Set<Player> _setPlayers = _bjRound.players;
     Deck _deck = _game.deck;
@@ -32,8 +33,8 @@ class BJPlayerDecisionState extends BJGameState{
     }
     _bjRound.addDealerCard();
     if(isConsoleMode){
-        _bjRound.printDealer();
-    }
+      _bjRound.printDealer();
+  }
     for(Player player in _setPlayers){
       _bjRound.takeCard(player.idPlayer);
       print("Player ${player.username}'s cards: ");
@@ -66,6 +67,6 @@ class BJPlayerDecisionState extends BJGameState{
     else{
       _game.playerDecisions();
     }
-    _game.updateGameState(BJDealerPlayState(_game));
+    _game.updateGameState(BJDealerPlayState(_game));    
   }
 }

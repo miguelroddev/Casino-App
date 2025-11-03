@@ -24,6 +24,9 @@ class Player{
   double get totalMoneyBetted => _totalMoneyBetted;
 
   void increaseBankRoll(double money){
+    if (money <= 0){
+      throw InvalidMoneyAmountException(money);
+    }
     _bankroll += money;
   }
 

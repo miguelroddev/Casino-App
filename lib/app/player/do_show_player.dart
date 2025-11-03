@@ -1,17 +1,22 @@
 import 'dart:io';
 
+import 'package:casino_app/app/exception/app_invalid_entry_exception.dart';
 import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
 
 class DoShowPlayer {
   void execute(CasinoManager casinoManager){
-    print("Insert PlayerID: ");
-    String? _input = stdin.readLineSync();
-    int? _playerID = int.tryParse(_input ?? '');
-    if (_playerID == null || _playerID <= 0){
-      //throw InvalidPlayerIDException
+    try{
+      print("Insert PlayerID: ");
+      String? _input = stdin.readLineSync();
+      int? _playerID = int.tryParse(_input ?? '');
+      if (_playerID == null){
+        throw AppInvalidEntryException();
+      }
+      Player player = casinoManager.getPlayer(_playerID!);
+      print(player.toString());
+    } catch (e){
+      print(e.toString());
     }
-    Player player = casinoManager.getPlayer(_playerID!);
-    print(player.toString());
   }
 }
