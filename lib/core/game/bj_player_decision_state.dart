@@ -7,7 +7,6 @@ import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/game/bj_dealer_play_state.dart';
 import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
-import 'package:casino_app/core/game/bj_payout_state.dart';
 import 'package:casino_app/core/game/bj_start_round_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/player/player.dart';

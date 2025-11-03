@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:casino_app/core/card/card.dart';
@@ -6,6 +7,12 @@ import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/card/ranks.dart';
 import 'package:casino_app/core/card/suit_type.dart';
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/exceptions/cannot_double_exception.dart';
+import 'package:casino_app/core/exceptions/cannot_split_exception.dart';
+import 'package:casino_app/core/exceptions/invalid_amount_of_decks_exception.dart';
+import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
+import 'package:casino_app/core/exceptions/not_ace_exception.dart';
+import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
@@ -37,10 +44,6 @@ class BlackJack extends Game{
     BlackJackRound round = BlackJackRound(_roundID, this, _players);
     _roundID++;
     setRound(round);
-  }
-  void checkGameEnd(){}
-  void startRound(){
-    
   }
 
   void removePlayer(int playerID) {
@@ -88,8 +91,8 @@ class BlackJack extends Game{
   }
 
   Deck generateBlackjackDeck(int numDecks) {
-    if (numDecks <= 0 || numDecks > 8){
-      //throw InvalidAmountDecksException 
+    if (numDecks <= 2 || numDecks > 8){
+      throw InvalidAmountOfDecksException(numDecks);
     }
     
     List<Card> deck = [];
@@ -114,7 +117,7 @@ class BlackJack extends Game{
 
   int calculateHand(List<Card> cards){
     if (cards.isEmpty){
-      //throw NoCardInHandException
+      throw NoCardInHandException();
     }
     int sum = 0;
     int numAce = 0;
@@ -157,9 +160,6 @@ class BlackJack extends Game{
       int handIndex = 1;
       for (Hand hand in round.getHands(player.idPlayer)) {
         sumPayout += hand.payout(dealerValue);
-        // if (isConsoleMode){
-        //   print("The player ${player.username} won $sumPayout € in the hand number $handIndex");
-        // }
         handIndex++;
       }
       player.payoutUpdate(sumPayout);
@@ -167,6 +167,38 @@ class BlackJack extends Game{
         print("The player ${player.username} won in total $sumPayout €");
       }
       player.clearBet();
+    }
+  }
+  void handleHit(Hand hand){
+    Card newCard = getCardFromDeck();
+    hand.addCard(newCard);
+    print("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}");
+  }
+
+  void handleDouble(Hand hand, Player player){
+    if (player.sessionMoney >= hand.betAmount && hand.cards.length == 2) {
+      player.bet(hand.betAmount);
+      hand.addCard(getCardFromDeck());
+      if (isConsoleMode) {
+        hand.printHand();
+      }
+    } else if(player.sessionMoney < hand.betAmount) {
+      throw NotEnoughMoneyException();
+    }
+    else{
+      throw CannotDoubleException();
+    }
+  }
+  
+  void handleSplit(Hand hand, Player player, int i){
+    if (hand.cards.length == 2 &&
+    hand.cards[0].value == hand.cards[1].value) {
+      
+      player.bet(hand.betAmount); // second bet
+      round.splitHand(player.idPlayer, i);
+      print("Hand split!");
+    } else {
+      throw CannotSplitException();
     }
   }
 
@@ -199,9 +231,7 @@ class BlackJack extends Game{
             String? choice = stdin.readLineSync()?.toUpperCase();
             switch (choice) {
               case "H": // Hit
-                Card newCard = getCardFromDeck();
-                hand.addCard(newCard);
-                print("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}");
+                handleHit(hand);
                 break;
 
               case "S": // Stand
@@ -209,27 +239,23 @@ class BlackJack extends Game{
                 break;
 
               case "D": // Double down
-                if (player.sessionMoney >= hand.betAmount && hand.cards.length == 2) {
-                  player.bet(hand.betAmount);
-                  hand.addCard(getCardFromDeck());
-                  if (isConsoleMode) {
-                    hand.printHand();
-                  }
+                try {
+                  handleDouble(hand, player);
                   stand = true;
-                } else {
-                  //throw NotEnoughMoneyException
+                } catch (e){
+                  if (isConsoleMode){
+                    print(e.toString());
+                  }
                 }
                 break;
 
               case "P": // Split
-                if (hand.cards.length == 2 &&
-                    hand.cards[0].value == hand.cards[1].value) {
-                  player.bet(hand.betAmount); // second bet
-                  round.splitHand(player.idPlayer, i);
-                  print("Hand split!");
-                } else {
+                try {
+                  handleSplit(hand, player, i);
+                  stand = true;
+                } catch (e){
                   if (isConsoleMode){
-                    print("You can't split this hand.");
+                    print(e.toString());
                   }
                 }
                 break;
@@ -244,13 +270,17 @@ class BlackJack extends Game{
           if (hand.value > 21) {
             if (isConsoleMode){
               print("BUSTED! (${hand.value})");
-              hand.printHand();
+              if(stand==false){ // I added this because in the case it is a double it won't print twice
+                hand.printHand();
+              }
             }
             round.increaseBustedHands();          
           }
           if (hand.value == 21){
+            if(stand==false){ // I added this because in the case it is a double it won't print twice
+              hand.printHand();
+            }
             stand = true;
-            hand.printHand();
           }
         }
       }
@@ -259,7 +289,7 @@ class BlackJack extends Game{
 
   Card changeAceValue(Card ace){ // Unused method, maybe useful in the future
     if (ace.rank != Rank.ACE){
-      //throw NotAceException
+      throw NotAceException();
     }
     if (ace.value == 11){
       ace.changeValue(1);

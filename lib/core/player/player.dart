@@ -1,4 +1,6 @@
 
+import 'package:casino_app/core/exceptions/invalid_money_amount_exception.dart';
+import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
 import 'package:casino_app/core/player/player_type.dart';
 
 class Player{
@@ -48,10 +50,10 @@ class Player{
 
   void addSessionMoney(double money){
     if (money <= 0){
-      //throw InvalidMoneyAmountException
+      throw InvalidMoneyAmountException(money);
     }
     if(_bankroll - money <0){
-      // throw NotEnoughMoneyException
+      throw NotEnoughMoneyException();
     }
     _bankroll -= money;
     _sessionMoney += money;
@@ -69,10 +71,10 @@ class Player{
 
   void bet(double money){
     if (money<=0){
-      //throw InvalidBetAmountException
+      throw InvalidMoneyAmountException(money);
     }
     if(_sessionMoney - money <0){
-      // throw NotEnoughMoneyException
+      throw NotEnoughMoneyException();
     }
     _sessionMoney -= money;
     _totalProfit -= money;

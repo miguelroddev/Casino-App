@@ -2,7 +2,7 @@ import 'package:casino_app/core/casino.dart';
 import 'package:casino_app/core/date/date.dart';
 import 'package:casino_app/core/player/player.dart';
 
-class CasinoManager {
+class CasinoManager{
   Casino _casino;
 
   CasinoManager(this._casino);

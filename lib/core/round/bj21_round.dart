@@ -3,6 +3,9 @@ import 'dart:collection';
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/hand.dart';
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/exceptions/invalid_hand_index_exception.dart';
+import 'package:casino_app/core/exceptions/invalid_split_exception.dart';
+import 'package:casino_app/core/exceptions/player_not_in_round_exception.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/player/player.dart';
@@ -26,7 +29,6 @@ class BlackJackRound extends Round{
 
 
   // takeCard != Hit, takeCard is automatic/beggining of the round
-
   void takeCard(int idOfPlayer){
     bool idExists = false;
     Player _player;
@@ -37,7 +39,7 @@ class BlackJackRound extends Round{
       }
     }
     if (idExists == false){
-      //throw PlayerNotInRoundException
+      throw PlayerNotInRoundException(idOfPlayer);
     }
     Card temp = game.getCardFromDeck();
     addCardToMap(idOfPlayer, temp);
@@ -90,12 +92,12 @@ class BlackJackRound extends Round{
     List<Hand> hands = _mapPlayerHand[playerID]!;
 
     if (handIndex < 0 || handIndex >= hands.length) {
-      // throw InvalidHandIndexException
+      throw InvalidHandIndexException(handIndex);
     }
     Hand original = hands[handIndex];
     if (original.cards.length != 2 ||
         original.cards[0].value != original.cards[1].value) {
-      // throw InvalidSplitException
+      throw InvalidSplitException();
     }
     Card splitCard = original.cards.removeLast();
     Hand newHand = Hand(playerID);
@@ -136,7 +138,7 @@ class BlackJackRound extends Round{
 
   void removeHand(int playerID, Hand hand) {
     if (!_mapPlayerHand.containsKey(playerID)) {
-      // throw PlayerNotInRoundException
+      throw PlayerNotInRoundException(playerID);
     }
 
     _mapPlayerHand[playerID]!.remove(hand);

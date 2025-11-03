@@ -1,10 +1,10 @@
 import 'package:casino_app/core/config.dart';
+import 'package:casino_app/core/exceptions/invalid_entry_exception.dart';
 import 'package:casino_app/core/game/bj_dealer_play_state.dart';
 import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/bj_player_decision_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
-import 'package:casino_app/core/game/options_start_round.dart';
 import 'dart:io';
 
 import 'package:casino_app/core/player/player.dart';
@@ -14,6 +14,18 @@ class BJStartRoundState extends BJGameState{
 
   BJStartRoundState(this._game);
 
+  
+  void handleBet(Player player){
+    stdout.write("Insert Amount to Bet: ");
+    String? input2 = stdin.readLineSync();
+    double? _money = double.tryParse(input2 ?? '');
+    if (_money == null){
+      throw InvalidEntryException();
+    }
+    player.bet(_money!);
+    print("Current Session money:"+ player.totalMoneyBetted.toString());
+  }
+
   @override
   void execute(){
     if (isConsoleMode){
@@ -21,7 +33,6 @@ class BJStartRoundState extends BJGameState{
       for (Player player in _game.getPlayers){
         bool invalido = true;
         do {
-          OptionsStartRound? _option;
           stdout.write("Available Options for ${player.username}:\n" +
           "1. Clear\n" + "2. Add Bet\n" + "3. Confirm\n" + "0. Exit\n");
           String? input = stdin.readLineSync();
@@ -29,14 +40,11 @@ class BJStartRoundState extends BJGameState{
             player.clearBet();
           }
           else if (input == "2"){
-            stdout.write("Insert Amount to Bet: ");
-            String? input2 = stdin.readLineSync();
-            double? _money = double.tryParse(input2 ?? '');
-            if (_money == null){
-              //throw InvalidNumberException
+            try {
+              handleBet(player);
+            } catch (e){
+              print(e.toString());
             }
-            player.bet(_money!);
-            print("Current Session money:"+ player.totalMoneyBetted.toString());
           }
           else if (input == "3"){
             invalido = false;

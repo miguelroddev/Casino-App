@@ -23,7 +23,5 @@ abstract class Game{
   }
 
   void endGame();
-  void checkGameEnd();
-  void startRound();
 
 }
