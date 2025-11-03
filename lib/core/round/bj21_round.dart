@@ -12,6 +12,7 @@ class BlackJackRound extends Round{
   Map<int, List<Hand>> _mapPlayerHand = new HashMap();
   List<Card> _dealer = [];
   late Card? _dealerHiddenCard;
+  int _numberOfBusted = 0;
 
   BlackJackRound(int idRound, BlackJack _game, Set<Player> _players):super(idRound, _game, _players){}
 
@@ -20,6 +21,7 @@ class BlackJackRound extends Round{
   BlackJack get game => super.game as BlackJack;
   List<Card> get dealer => _dealer;
   Card? get dealerHiddenCard => _dealerHiddenCard;
+  int get numberOfBusted => _numberOfBusted;
   
 
 
@@ -78,7 +80,7 @@ class BlackJackRound extends Round{
   }
 
   void revealDealerHiddenCard(){
-    if (_dealerHiddenCard == null){
+    if (_dealerHiddenCard != null){
       _dealer.add(_dealerHiddenCard!);
       _dealerHiddenCard = null;
     }
@@ -146,6 +148,18 @@ class BlackJackRound extends Round{
     if (isConsoleMode) {
       print("Removed a completed hand for player $playerID.");
     }
+  }
+
+  int getNumberOfHands() {
+    int total = 0;
+    for (var entry in _mapPlayerHand.entries) {
+      total += entry.value.length;
+    }
+    return total;
+  }
+
+  void increaseBustedHands({int num = 1}){
+    _numberOfBusted += num;
   }
 
   void printDealer() {

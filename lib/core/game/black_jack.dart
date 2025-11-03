@@ -152,16 +152,19 @@ class BlackJack extends Game{
   }
 
   void settleRound(int dealerValue){
-    print("settleRound Dealer Value: $dealerValue");
     for (Player player in round.players) {
       double sumPayout = 0;
+      int handIndex = 1;
       for (Hand hand in round.getHands(player.idPlayer)) {
         sumPayout += hand.payout(dealerValue);
+        // if (isConsoleMode){
+        //   print("The player ${player.username} won $sumPayout € in the hand number $handIndex");
+        // }
+        handIndex++;
       }
-      print("The payout was $sumPayout");
       player.payoutUpdate(sumPayout);
       if (isConsoleMode){
-        print("The player ${player.username} won a net value of $sumPayout");
+        print("The player ${player.username} won in total $sumPayout €");
       }
       player.clearBet();
     }
@@ -206,8 +209,8 @@ class BlackJack extends Game{
                 break;
 
               case "D": // Double down
-                if (player.sessionMoney >= hand.betAmount) {
-                  player.addBet(hand.betAmount);
+                if (player.sessionMoney >= hand.betAmount && hand.cards.length == 2) {
+                  player.bet(hand.betAmount);
                   hand.addCard(getCardFromDeck());
                   if (isConsoleMode) {
                     hand.printHand();
@@ -221,7 +224,7 @@ class BlackJack extends Game{
               case "P": // Split
                 if (hand.cards.length == 2 &&
                     hand.cards[0].value == hand.cards[1].value) {
-                  player.addBet(hand.betAmount); // second bet
+                  player.bet(hand.betAmount); // second bet
                   round.splitHand(player.idPlayer, i);
                   print("Hand split!");
                 } else {
@@ -241,7 +244,9 @@ class BlackJack extends Game{
           if (hand.value > 21) {
             if (isConsoleMode){
               print("BUSTED! (${hand.value})");
+              hand.printHand();
             }
+            round.increaseBustedHands();          
           }
           if (hand.value == 21){
             stand = true;
@@ -252,8 +257,7 @@ class BlackJack extends Game{
     }
   }
 
-
-  Card changeAceValue(Card ace){ // useless method? maybe.
+  Card changeAceValue(Card ace){ // Unused method, maybe useful in the future
     if (ace.rank != Rank.ACE){
       //throw NotAceException
     }

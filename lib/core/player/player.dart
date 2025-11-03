@@ -10,7 +10,7 @@ class Player{
   double _bankroll = 0;
   double _sessionMoney = 0; // maybe remove this
   double _totalProfit = 0;
-  double _totalMoneyBetted = 0;
+  double _totalMoneyBetted = 0; // only serves to keep track of the initial better amount
 
   Player(this.idPlayer, this.username, this.email, this.password){}
 
@@ -32,17 +32,6 @@ class Player{
   void clearBet(){
     _sessionMoney += _totalMoneyBetted;
     _totalMoneyBetted = 0;
-  }
-
-  void addBet(double money){
-    if (money<= 0){
-      //throw InvalidMoneyAmountException
-    }
-    if (_sessionMoney - money <0){
-      // throw NotEnoughMoneyException
-    }
-    _sessionMoney -= money;
-    _totalMoneyBetted += money;
   }
 
   void finishSession(){
@@ -69,9 +58,9 @@ class Player{
   }
 
   void payoutUpdate(double money){
-    _sessionMoney += money + _totalMoneyBetted;
+    _sessionMoney += money;
     _totalProfit += money;
-    _totalMoneyBetted = 0;
+    clearTotalMoneyBetted(); //it's here and not at the beggining because of the case there is a split
   }
 
   void addTotalProfit(double money){
@@ -86,6 +75,7 @@ class Player{
       // throw NotEnoughMoneyException
     }
     _sessionMoney -= money;
+    _totalProfit -= money;
     _totalMoneyBetted += money;
   }
 

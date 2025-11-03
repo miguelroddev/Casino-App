@@ -21,13 +21,13 @@ class BJDealerPlayState extends BJGameState{
     _bjRound.revealDealerHiddenCard();
     _bjRound.printDealer();
     int _valueDealer = _game.calculateHand(_bjRound.dealer);
-    if(_valueDealer < 17){
+    if(_valueDealer < 17 && _bjRound.numberOfBusted != _bjRound.getNumberOfHands()){
       while (_game.calculateHand(_bjRound.dealer) < 17){
         _bjRound.addDealerCard();
         _bjRound.printDealer();
       }
     }
-    print("Dealer Value is play_state: ${_game.calculateHand(_bjRound.dealer)}");
+    print("Dealer Value is: ${_game.calculateHand(_bjRound.dealer)}");
     _game.settleRound(_game.calculateHand(_bjRound.dealer)); // already does the payout automatically
     _game.endGame();
     _game.updateGameState(BJStartRoundState(_game));

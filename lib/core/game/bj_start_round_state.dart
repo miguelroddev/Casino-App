@@ -35,7 +35,7 @@ class BJStartRoundState extends BJGameState{
             if (_money == null){
               //throw InvalidNumberException
             }
-            player.addBet(_money!);
+            player.bet(_money!);
             print("Current Session money:"+ player.totalMoneyBetted.toString());
           }
           else if (input == "3"){
