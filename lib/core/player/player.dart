@@ -84,6 +84,26 @@ class Player{
     _totalMoneyBetted += money;
   }
 
+  void setTotalMoneyBetted(double money){
+    _totalMoneyBetted = money;
+  }
+
+  void setTotalProfit(double money){
+    _totalProfit = money;
+  }
+
+  void setBankRoll(double money){
+    _bankroll = money;
+  }
+
+  void setSessionMoney(double money){
+    _sessionMoney = money;
+  }
+  
+  void setPlayerType(PlayerType playerType){
+    _playerType = playerType;
+  }
+
   @override
   String toString() {
     return "$idPlayer:$username:$email:$_bankroll:$playerType:$_totalProfit";
