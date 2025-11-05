@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -14,6 +15,11 @@ import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
 import 'package:casino_app/core/exceptions/not_ace_exception.dart';
 import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
+import 'package:casino_app/core/game/events/game_event.dart';
+import 'package:casino_app/core/game/events/payout_single_hand_event.dart';
+import 'package:casino_app/core/game/events/player_double_event.dart';
+import 'package:casino_app/core/game/events/player_hit_event.dart';
+import 'package:casino_app/core/game/events/player_payout_event.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/player/player.dart';
@@ -21,6 +27,7 @@ import 'package:casino_app/core/round/bj21_round.dart';
 import 'package:casino_app/core/round/round.dart';
 
 class BlackJack extends Game{
+  final StreamController<GameEvent> _controller = StreamController<GameEvent>();
   late Deck _deck;
   BJGameState? _gameState;
   int _roundID = 1;
@@ -34,11 +41,15 @@ class BlackJack extends Game{
 
   //getter
   @override
+  Stream<GameEvent> get stream => _controller.stream;
   BlackJackRound get round => super.round as BlackJackRound;
   Deck get deck => _deck;
   BJGameState? get gameState => _gameState;
 
-  
+
+  void emit(GameEvent event) => _controller.add(event);
+  void dispose() => _controller.close();
+
   void endGame(){
     Set<Player> _players = super.round.players;
     BlackJackRound round = BlackJackRound(_roundID, this, _players);
@@ -159,32 +170,31 @@ class BlackJack extends Game{
       double sumPayout = 0;
       int handIndex = 0;
       for (Hand hand in round.getHands(player.idPlayer)) {
-        sumPayout += hand.payout(dealerValue);
+        double temp = hand.payout(dealerValue); 
+        sumPayout += temp;
+        PayoutSingleHandEvent("", player, temp, handIndex);
         handIndex++;
-        /* 
-          maybe print("The player ${player.username} won hand.payout(dealerValue); in hand numer $handIndex €");
-        */
       }
       player.payoutUpdate(sumPayout);
-      if (isConsoleMode){
-        print("The player ${player.username} won in total $sumPayout €");
-      }
+      PlayerPayoutEvent("The player ${player.username} won in total $sumPayout €",
+      player, sumPayout);
       player.clearBet();
     }
   }
-  void handleHit(Hand hand){
+  void handleHit(Hand hand, Player player){
     Card newCard = getCardFromDeck();
     hand.addCard(newCard);
-    print("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}");
+    PlayerHitEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}",
+    newCard, player);
   }
 
   void handleDouble(Hand hand, Player player){
     if (player.sessionMoney >= hand.betAmount && hand.cards.length == 2) {
       player.bet(hand.betAmount);
-      hand.addCard(getCardFromDeck());
-      if (isConsoleMode) {
-        hand.printHand();
-      }
+      Card newCard = getCardFromDeck(); 
+      hand.addCard(newCard);
+      PlayerDoubleEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}", 
+      newCard, player, hand.cards);
     } else if(player.sessionMoney < hand.betAmount) {
       throw NotEnoughMoneyException();
     }
@@ -199,7 +209,6 @@ class BlackJack extends Game{
       
       player.bet(hand.betAmount); // second bet
       round.splitHand(player.idPlayer, i);
-      print("Hand split!");
     } else {
       throw CannotSplitException();
     }
@@ -234,7 +243,7 @@ class BlackJack extends Game{
             String? choice = stdin.readLineSync()?.toUpperCase();
             switch (choice) {
               case "H": // Hit
-                handleHit(hand);
+                handleHit(hand, player);
                 break;
 
               case "S": // Stand

@@ -15,16 +15,16 @@ class Card{
     _value = value;
   }
 
-  void toCommandPrint() {
+  List<String> toConsoleLines() {
     final rankStr = rank.toString();
     final suitStr = suit.toPicture();
 
-    print('''
-┌─────────┐
-│$rankStr${rankStr.length == 1 ? ' ' : ''}       │
-│    $suitStr    │
-│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│
-└─────────┘
-''');
+    return [
+      "┌─────────┐",
+      "│$rankStr${rankStr.length == 1 ? ' ' : ''}       │",
+      "│    $suitStr    │",
+      "│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│",
+      "└─────────┘",
+    ];
   }
 }

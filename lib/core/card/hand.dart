@@ -71,7 +71,7 @@ class Hand {
 
   void printHand() {
     if (_cards.isEmpty) {
-      //throw IsEmptyException
+      throw NoCardInHandException();
     }
 
     final cardLines = _cards.map((card) {

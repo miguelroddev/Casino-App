@@ -30,7 +30,7 @@ class BlackJackRound extends Round{
 
 
   // takeCard != Hit, takeCard is automatic/beggining of the round
-  void takeCard(int idOfPlayer){
+  Card takeCard(int idOfPlayer){
     bool idExists = false;
     Player _player;
     for (Player player in players){
@@ -44,11 +44,24 @@ class BlackJackRound extends Round{
     }
     Card temp = game.getCardFromDeck();
     addCardToMap(idOfPlayer, temp);
+    return temp;
   }
 
 
   void removePlayer(int playerID) {
     players.removeWhere((player) => player.idPlayer == playerID);
+  }
+
+  List<Hand> getHands(int idPlayer){
+    if (_mapPlayerHand[idPlayer] == null){
+      throw PlayerNotInRoundException(idPlayer);
+    }
+    return _mapPlayerHand[idPlayer]!;
+  }
+  
+  Hand getHand(int playerID, {int handIndex = 0}){
+    List<Hand> _hands = getHands(playerID);
+    return _hands[handIndex];
   }
 
   void addCardToMap(int playerID, Card card, {int handIndex = 0}){
@@ -69,13 +82,17 @@ class BlackJackRound extends Round{
     player.bet(money);
   }
 
-  void addDealerCard(){
-    _dealer.add(game.getCardFromDeck());
+  Card addDealerCard(){
+    Card temp = game.getCardFromDeck();
+    _dealer.add(temp);
+    return temp;
   }
 
-  void removeHiddenCard(){
+  Card removeHiddenCard(){
+    Card temp = _dealerHiddenCard!;
     _dealer.add(_dealerHiddenCard!);
     _dealerHiddenCard = null;
+    return temp;
   }
 
   void addDealerHiddenCard(){
@@ -110,32 +127,11 @@ class BlackJackRound extends Round{
 
     // Insert the new hand right after the original one
     hands.insert(handIndex + 1, newHand);
-
-    if (isConsoleMode) {
-      print("Split successful! New hands:");
-      for (int i = 0; i < hands.length; i++) {
-        print("Hand number ${i + 1}:");
-        hands[i].printHand();
-      }
-    }
+    
   }
 
 
-  List<Hand> getHands(int idPlayer){
-    if (_mapPlayerHand[idPlayer] == null){
-      throw PlayerNotInRoundException(idPlayer);
-    }
-    return _mapPlayerHand[idPlayer]!;
-  }
   
-  void printHands(List<Hand> Hands){
-    int i =1;
-    for (Hand hand in Hands){
-      print("Hand number $i: ");
-      hand.printHand();
-      i++;
-    }
-  }
 
   void removeHand(int playerID, Hand hand) {
     if (!_mapPlayerHand.containsKey(playerID)) {
@@ -148,9 +144,9 @@ class BlackJackRound extends Round{
       _mapPlayerHand.remove(playerID);
     }
 
-    if (isConsoleMode) {
-      print("Removed a completed hand for player $playerID.");
-    }
+    // if (isConsoleMode) {
+    //   print("Removed a completed hand for player $playerID.");
+    // }
   }
 
   int getNumberOfHands() {
@@ -165,29 +161,4 @@ class BlackJackRound extends Round{
     _numberOfBusted += num;
   }
 
-  void printDealer() {
-    print("\nDealer's cards:");
-
-    if (_dealer.isEmpty && _dealerHiddenCard == null) {
-      throw NoCardInHandException();
-    }
-    final visibleCards = List<Card>.from(_dealer);
-
-    final cardLines = visibleCards.map((card) {
-      final rankStr = card.rank.toString();
-      final suitStr = card.suit.toPicture();
-
-      return [
-        "┌─────────┐",
-        "│$rankStr${rankStr.length == 1 ? ' ' : ''}       │",
-        "│    $suitStr    │",
-        "│       ${rankStr.length == 1 ? ' ' : ''}$rankStr│",
-        "└─────────┘",
-      ];
-    }).toList();
-
-    for (int i = 0; i < cardLines[0].length; i++) {
-      print(cardLines.map((lines) => lines[i]).join(" "));
-    }
-  }
 }

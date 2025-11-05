@@ -1,4 +1,4 @@
-import 'package:casino_app/app/exception/app_invalid_entry_exception.dart';
+import 'package:casino_app/app_console/exception/app_invalid_entry_exception.dart';
 import 'package:casino_app/core/casino_manager.dart';
 import 'dart:io';
 

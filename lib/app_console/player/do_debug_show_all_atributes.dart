@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:casino_app/app/exception/app_invalid_entry_exception.dart';
+import 'package:casino_app/app_console/exception/app_invalid_entry_exception.dart';
 import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
 
-class DoAddBankroll {
+class DoDebugShowAllAtributes {
+  
   void execute(CasinoManager casinoManager){
-    try{
+    try {
       print("Insert PlayerID: ");
       String? _input = stdin.readLineSync();
       int? _playerID = int.tryParse(_input ?? '');
@@ -14,15 +15,15 @@ class DoAddBankroll {
         throw AppInvalidEntryException();
       }
       Player player = casinoManager.getPlayer(_playerID!);
-      print("Insert Amount: ");
-      String? _input2 = stdin.readLineSync();
-      double? _money = double.tryParse(_input2 ?? '');
-      if (_money == null){
-        throw AppInvalidEntryException();
-      }
-      player.increaseBankRoll(_money!);
+      print("PlayerID: ${player.idPlayer}\n" +
+            "Bankroll: ${player.bankroll}\n" +
+            "SessionMoney: ${player.sessionMoney}\n" +
+            "TotalProfit: ${player.totalProfit}\n" +
+            "TotalMoneyBetted: ${player.totalMoneyBetted}\n"
+      );
     } catch (e){
       print(e.toString());
     }
+    
   }
 }

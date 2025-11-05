@@ -1,4 +1,4 @@
-import 'package:casino_app/app/menu/menu.dart';
+import 'package:casino_app/app_console/menu/menu.dart';
 import 'package:casino_app/core/casino_manager.dart';
 
 typedef MenuAction = void Function(CasinoManager receiver);
