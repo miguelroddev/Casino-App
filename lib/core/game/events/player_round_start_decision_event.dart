@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:casino_app/core/game/events/game_event.dart';
 import 'package:casino_app/core/player/player.dart';
 
-class PlayerBlackjackEvent extends GameEvent{
+class PlayerRoundStartDecisionEvent extends GameEvent{
   final Player player;
-  final double payout;
+  final Completer<String> completer = Completer<String>();
 
-  PlayerBlackjackEvent(super.message, this.player, this.payout);
+  
+  PlayerRoundStartDecisionEvent(super.message, this.player);
 
   @override
   String toConsolePrint(){

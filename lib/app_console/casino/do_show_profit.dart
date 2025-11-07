@@ -3,7 +3,7 @@ import 'package:casino_app/core/config.dart';
 
 class DoShowProfit {
   
-  void execute(CasinoManager casinoManager){
+  Future<void> execute(CasinoManager casinoManager) async{
     if(isConsoleMode){
       print("The casino profit is: ${casinoManager.casinoProfit}");
     }

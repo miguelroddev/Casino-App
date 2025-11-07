@@ -4,6 +4,9 @@ import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/bj_start_round_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
+import 'package:casino_app/core/game/events/dealer_draws_card_event.dart';
+import 'package:casino_app/core/game/events/dealer_reveal_hidden_card_event.dart';
+import 'package:casino_app/core/game/events/show_dealer_final_value_event.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
 
@@ -13,22 +16,23 @@ class BJDealerPlayState extends BJGameState{
   BJDealerPlayState(this._game);
 
   @override
-  void execute(){
+  Future<void> execute()async{
     BlackJackRound _bjRound = _game.round;
     Set<Player> _setPlayers = _bjRound.players;
     Deck _deck = _game.deck;
 
-    _bjRound.revealDealerHiddenCard();
-    _bjRound.printDealer();
+    Card temp = _bjRound.revealDealerHiddenCard();
+    await _game.emit(DealerRevealHiddenCardEvent("", temp, _bjRound.dealer));
     int _valueDealer = _game.calculateHand(_bjRound.dealer);
     if(_valueDealer < 17 && _bjRound.numberOfBusted != _bjRound.getNumberOfHands()){
       while (_game.calculateHand(_bjRound.dealer) < 17){
-        _bjRound.addDealerCard();
-        _bjRound.printDealer();
+        temp = _bjRound.addDealerCard();
+        await _game.emit(DealerDrawsCardEvent("", _bjRound.dealer, temp, null));
       }
     }
-    print("Dealer Value is: ${_game.calculateHand(_bjRound.dealer)}");
-    _game.settleRound(_game.calculateHand(_bjRound.dealer)); // already does the payout automatically
+    int dealerValue = _game.calculateHand(_bjRound.dealer);
+    await _game.emit(ShowDealerFinalValueEvent("Dealer Value is: $dealerValue", dealerValue));
+    await _game.settleRound(_game.calculateHand(_bjRound.dealer)); // already does the payout automatically
     _game.endGame();
     _game.updateGameState(BJStartRoundState(_game));
     

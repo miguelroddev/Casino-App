@@ -5,7 +5,7 @@ class DoDisplayDate {
 
   DoDisplayDate();
 
-  void execute(CasinoManager casinoManager){
+  Future<void> execute(CasinoManager casinoManager) async{
     if (isConsoleMode){
       print("The current date is: ${casinoManager.date.day}");
     }

@@ -9,7 +9,7 @@ class Menu {
 
   Menu({required this.title, required this.options});
 
-  void start(CasinoManager casinoManager) {
+  Future<void> start(CasinoManager casinoManager) async{
     while (true) {
       print('\n=== $title ===');
       for (int i = 0; i < options.length; i++) {
@@ -26,7 +26,7 @@ class Menu {
 
       if (index >= 1 && index <= options.length) {
         try{
-          options[index - 1].action(casinoManager);
+          await options[index - 1].action(casinoManager);
         } catch(e){
           print(e.toString());
         }

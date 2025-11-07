@@ -6,6 +6,7 @@ import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/exceptions/invalid_hand_index_exception.dart';
 import 'package:casino_app/core/exceptions/invalid_split_exception.dart';
 import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
+import 'package:casino_app/core/exceptions/no_hidden_card_exception.dart';
 import 'package:casino_app/core/exceptions/player_not_in_round_exception.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/game.dart';
@@ -15,7 +16,7 @@ import 'package:casino_app/core/round/round.dart';
 class BlackJackRound extends Round{
   Map<int, List<Hand>> _mapPlayerHand = new HashMap();
   List<Card> _dealer = [];
-  late Card? _dealerHiddenCard;
+  Card? _dealerHiddenCard = null;
   int _numberOfBusted = 0;
 
   BlackJackRound(int idRound, BlackJack _game, Set<Player> _players):super(idRound, _game, _players){}
@@ -99,11 +100,14 @@ class BlackJackRound extends Round{
     _dealerHiddenCard = game.getCardFromDeck();
   }
 
-  void revealDealerHiddenCard(){
-    if (_dealerHiddenCard != null){
-      _dealer.add(_dealerHiddenCard!);
-      _dealerHiddenCard = null;
+  Card revealDealerHiddenCard(){
+    if (_dealerHiddenCard == null){
+      throw NoHiddenCardException();
     }
+    final temp = _dealerHiddenCard!;
+    _dealer.add(_dealerHiddenCard!);
+    _dealerHiddenCard = null;
+    return temp;
   }
 
   void splitHand(int playerID, int handIndex) {

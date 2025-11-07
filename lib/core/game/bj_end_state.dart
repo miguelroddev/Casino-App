@@ -7,5 +7,5 @@ class BJEndState extends BJGameState{
   BJEndState(this._game);
 
   @override
-  void execute(){}
+  Future<void> execute()async{}
 }

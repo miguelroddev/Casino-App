@@ -16,10 +16,15 @@ import 'package:casino_app/core/exceptions/not_ace_exception.dart';
 import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/events/game_event.dart';
+import 'package:casino_app/core/game/events/invalid_option_event.dart';
 import 'package:casino_app/core/game/events/payout_single_hand_event.dart';
+import 'package:casino_app/core/game/events/player_blackjack_event.dart';
+import 'package:casino_app/core/game/events/player_bust_event.dart';
+import 'package:casino_app/core/game/events/player_decision_event.dart';
 import 'package:casino_app/core/game/events/player_double_event.dart';
 import 'package:casino_app/core/game/events/player_hit_event.dart';
 import 'package:casino_app/core/game/events/player_payout_event.dart';
+import 'package:casino_app/core/game/events/player_reached21_event.dart';
 import 'package:casino_app/core/game/game.dart';
 import 'package:casino_app/core/game/game_type.dart';
 import 'package:casino_app/core/player/player.dart';
@@ -47,7 +52,11 @@ class BlackJack extends Game{
   BJGameState? get gameState => _gameState;
 
 
-  void emit(GameEvent event) => _controller.add(event);
+  Future<void> emit(GameEvent event) async{
+    _controller.add(event);
+    await Future.delayed(Duration.zero);
+  }
+
   void dispose() => _controller.close();
 
   void endGame(){
@@ -165,36 +174,39 @@ class BlackJack extends Game{
     }
   }
 
-  void settleRound(int dealerValue){
+  Future<void> settleRound(int dealerValue) async{
     for (Player player in round.players) {
       double sumPayout = 0;
       int handIndex = 0;
       for (Hand hand in round.getHands(player.idPlayer)) {
         double temp = hand.payout(dealerValue); 
         sumPayout += temp;
-        PayoutSingleHandEvent("", player, temp, handIndex);
+        await emit(PayoutSingleHandEvent("", player, temp, handIndex));
         handIndex++;
       }
       player.payoutUpdate(sumPayout);
-      PlayerPayoutEvent("The player ${player.username} won in total $sumPayout €",
+      final event = PlayerPayoutEvent("The player ${player.username} won in total $sumPayout €",
       player, sumPayout);
+      await emit(event);
       player.clearBet();
     }
   }
-  void handleHit(Hand hand, Player player){
+  Future<void> handleHit(Hand hand, Player player) async{
     Card newCard = getCardFromDeck();
     hand.addCard(newCard);
-    PlayerHitEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}",
+    final event = PlayerHitEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}",
     newCard, player);
+    await emit(event);
   }
 
-  void handleDouble(Hand hand, Player player){
+  Future<void> handleDouble(Hand hand, Player player) async{
     if (player.sessionMoney >= hand.betAmount && hand.cards.length == 2) {
       player.bet(hand.betAmount);
       Card newCard = getCardFromDeck(); 
       hand.addCard(newCard);
-      PlayerDoubleEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}", 
+      final event = PlayerDoubleEvent("You drew: ${newCard.rank.toString()} of ${newCard.suit.toString()}", 
       newCard, player, hand.cards);
+      await emit(event);
     } else if(player.sessionMoney < hand.betAmount) {
       throw NotEnoughMoneyException();
     }
@@ -214,84 +226,67 @@ class BlackJack extends Game{
     }
   }
 
-  void playerDecisions() {
+  Future<void> playerDecisions() async{
     BlackJackRound round = this.round;
     for (Player player in round.players) {
-      if (isConsoleMode){
-        print("\n--- ${player.username}'s turn ---");
-      }
-
-      for (int i = 0; i < round.getHands(player.idPlayer).length; i++) {
-        Hand hand = round.getHands(player.idPlayer)[i];
+      int i = 0;
+      for (var hand in List<Hand>.from(round.getHands(player.idPlayer))) {
         bool stand = false;
 
         if (hand.cards.length == 2 && hand.value == 21){
           double payout = hand.payout(0); // if it reaches here it means the dealer doesn't have BJ
+          await emit(PlayerBlackjackEvent("BLACKJACK for ${player.username}! Instant payout of $payout", player, payout));
           player.payoutUpdate(payout);
           round.removeHand(player.idPlayer, hand);
-          if (isConsoleMode) {
-            print("BLACKJACK for ${player.username}! Instant payout of $payout");
-          }
           break;
         }
 
         while (!stand && hand.value < 21) {
-          if (isConsoleMode){
-            print("\nCurrent hand value: ${hand.value}");
-            hand.printHand();
-            stdout.write("\nOptions: (H)it, (S)tand, (D)ouble, (P)Split (if possible): ");
-            String? choice = stdin.readLineSync()?.toUpperCase();
-            switch (choice) {
-              case "H": // Hit
-                handleHit(hand, player);
-                break;
 
-              case "S": // Stand
+          final event = PlayerDecisionEvent("Current hand value: ${hand.value}",player, hand.cards);
+          await emit(event);
+          final choice = await event.completer.future; // wait for the response!!!
+          switch (choice) {
+            case "H": // Hit
+              handleHit(hand, player);
+              break;
+
+            case "S": // Stand
+              stand = true;
+              break;
+
+            case "D": // Double down
+              try {
+                handleDouble(hand, player);
                 stand = true;
-                break;
-
-              case "D": // Double down
-                try {
-                  handleDouble(hand, player);
-                  stand = true;
-                } catch (e){
-                  if (isConsoleMode){
-                    print(e.toString());
-                  }
-                }
-                break;
-
-              case "P": // Split
-                try {
-                  handleSplit(hand, player, i);
-                  stand = true;
-                } catch (e){
-                  if (isConsoleMode){
-                    print(e.toString());
-                  }
-                }
-                break;
-
-              default:
+              } catch (e){
                 if (isConsoleMode){
-                  print("invalid Option");
+                  print(e.toString());
                 }
-            }
-          }
-          
-          if (hand.value > 21) {
-            if (isConsoleMode){
-              print("BUSTED! (${hand.value})");
-              if(stand==false){ // I added this because in the case it is a double it won't print twice
-                hand.printHand();
               }
-            }
+              break;
+
+            case "P": // sPlit
+              try {
+                handleSplit(hand, player, i);
+                stand = true;
+              } catch (e){
+                if (isConsoleMode){
+                  print(e.toString());
+                }
+              }
+              break;
+
+            default:
+              await emit(InvalidOptionEvent("You selected an invalid option!", player));
+          }
+        
+          if (hand.value > 21) {
+            await emit(PlayerBustEvent("BUSTED! (${hand.value})", player, stand, hand.cards));
             round.increaseBustedHands();          
           }
           if (hand.value == 21){
-            if(stand==false){ // I added this because in the case it is a double it won't print twice
-              hand.printHand();
-            }
+            await emit(PlayerReached21Event("", player, stand, hand.cards));
             stand = true;
           }
         }

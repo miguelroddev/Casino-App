@@ -5,6 +5,11 @@ import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_game_state.dart';
 import 'package:casino_app/core/game/bj_player_decision_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
+import 'package:casino_app/core/game/events/found_exception_event.dart';
+import 'package:casino_app/core/game/events/handle_bet_event.dart';
+import 'package:casino_app/core/game/events/invalid_option_event.dart';
+import 'package:casino_app/core/game/events/player_round_start_decision_event.dart';
+import 'package:casino_app/core/game/events/sucessful_bet_event.dart';
 import 'dart:io';
 
 import 'package:casino_app/core/player/player.dart';
@@ -15,35 +20,37 @@ class BJStartRoundState extends BJGameState{
   BJStartRoundState(this._game);
 
   
-  void handleBet(Player player){
-    stdout.write("Insert Amount to Bet: ");
-    String? input2 = stdin.readLineSync();
-    double? _money = double.tryParse(input2 ?? '');
+  Future<void> handleBet(Player player) async{
+    final event = HandleBetEvent("Insert Amount to Bet: ", player);
+    await _game.emit(event);
+    final input = await event.completer.future;
+    double? _money = double.tryParse(input);
     if (_money == null){
       throw InvalidEntryException();
     }
     player.bet(_money!);
-    print("Current Session money:"+ player.totalMoneyBetted.toString());
+    await _game.emit(SucessfulBetEvent("Current Session money:"+ player.totalMoneyBetted.toString()));
   }
 
   @override
-  void execute(){
+  Future<void> execute() async{
     if (isConsoleMode){
       List<Player> toRemove = [];
       for (Player player in _game.getPlayers){
         bool invalido = true;
         do {
-          stdout.write("Available Options for ${player.username}:\n" +
-          "1. Clear\n" + "2. Add Bet\n" + "3. Confirm\n" + "0. Exit\n");
-          String? input = stdin.readLineSync();
+          final event = PlayerRoundStartDecisionEvent("Available Options for ${player.username}:\n" +
+          "1. Clear\n" + "2. Add Bet\n3. Confirm\n" + "0. Exit\n", player);
+          await _game.emit(event);
+          final input = await event.completer.future;
           if (input == "1"){
             player.clearBet();
           }
           else if (input == "2"){
             try {
-              handleBet(player);
+              await handleBet(player);
             } catch (e){
-              print(e.toString());
+              await _game.emit(FoundExceptionEvent(e.toString()));
             }
           }
           else if (input == "3"){
@@ -55,7 +62,7 @@ class BJStartRoundState extends BJGameState{
             toRemove.add(player);
           }
           else {
-            print("Invalid option. Please try again.");
+            await _game.emit(InvalidOptionEvent("Invalid Input", player));
           }
         } while (invalido == true);
       }

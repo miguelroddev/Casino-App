@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:casino_app/app_console/exception/app_invalid_entry_exception.dart';
 import 'package:casino_app/core/card/deck.dart';
@@ -9,6 +10,9 @@ import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/game/bj_end_state.dart';
 import 'package:casino_app/core/game/bj_start_round_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
+import 'package:casino_app/core/game/events/handle_bet_event.dart';
+import 'package:casino_app/core/game/events/player_decision_event.dart';
+import 'package:casino_app/core/game/events/player_round_start_decision_event.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/round/bj21_round.dart';
 
@@ -54,13 +58,30 @@ class DoPlayBlackJack {
     if (isConsoleMode) {
       try{
         BlackJack _game = startupGame(casinoManager);
+        final streamSub = _game.stream.listen((event) async {
+          print(event.toConsolePrint());
+          if (event is PlayerDecisionEvent) {
+            final choice = stdin.readLineSync()?.toUpperCase() ?? '';
+            event.completer.complete(choice);
+          }
+          else if (event is PlayerRoundStartDecisionEvent) {
+            final choice = stdin.readLineSync()?.toUpperCase() ?? '';
+            event.completer.complete(choice);
+          }
+          else if (event is HandleBetEvent) {
+            final input = stdin.readLineSync()?.toUpperCase() ?? '';
+            event.completer.complete(input);
+          }
+        });
         _game.updateGameState(BJStartRoundState(_game));
         while (true){
-          _game.gameState!.execute();
+          await _game.gameState!.execute();
           if (_game.gameState is BJEndState){
             break;
           }
         }
+        await streamSub.cancel();
+        _game.dispose();
         print("GAME HAS ENDED");
       } catch (e){
         print(e.toString());

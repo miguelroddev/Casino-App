@@ -7,7 +7,7 @@ import 'package:casino_app/core/player/player.dart';
 class DoCreatePlayer {
 
 
-  void execute(CasinoManager casinoManager){
+  Future<void> execute(CasinoManager casinoManager) async{
     try{
       print("Insert Username: ");
       String? _username = stdin.readLineSync();

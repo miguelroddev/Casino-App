@@ -1,7 +1,7 @@
 import 'package:casino_app/core/game/black_jack.dart';
 
 abstract class BJGameState {
-  void execute();
+  Future<void> execute();
 }
 
 /* 

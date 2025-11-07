@@ -6,7 +6,7 @@ class DoAdvanceDate {
   
   DoAdvanceDate();
 
-  void execute(CasinoManager casinoManager){
+  Future<void> execute(CasinoManager casinoManager) async{
     if (isConsoleMode){
       stdout.write("Insert date:");
       String? _input = stdin.readLineSync();
