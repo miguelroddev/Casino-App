@@ -1,8 +1,8 @@
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/deck.dart';
-import 'package:casino_app/core/game/bj_end_state.dart';
-import 'package:casino_app/core/game/bj_game_state.dart';
-import 'package:casino_app/core/game/bj_start_round_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_end_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_game_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_start_round_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/events/dealer_draws_card_event.dart';
 import 'package:casino_app/core/game/events/dealer_reveal_hidden_card_event.dart';

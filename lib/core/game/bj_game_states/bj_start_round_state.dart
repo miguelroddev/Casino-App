@@ -1,16 +1,15 @@
 import 'package:casino_app/core/config.dart';
 import 'package:casino_app/core/exceptions/invalid_entry_exception.dart';
-import 'package:casino_app/core/game/bj_dealer_play_state.dart';
-import 'package:casino_app/core/game/bj_end_state.dart';
-import 'package:casino_app/core/game/bj_game_state.dart';
-import 'package:casino_app/core/game/bj_player_decision_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_dealer_play_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_end_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_game_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_player_decision_state.dart';
 import 'package:casino_app/core/game/black_jack.dart';
 import 'package:casino_app/core/game/events/found_exception_event.dart';
 import 'package:casino_app/core/game/events/handle_bet_event.dart';
 import 'package:casino_app/core/game/events/invalid_option_event.dart';
 import 'package:casino_app/core/game/events/player_round_start_decision_event.dart';
 import 'package:casino_app/core/game/events/sucessful_bet_event.dart';
-import 'dart:io';
 
 import 'package:casino_app/core/player/player.dart';
 

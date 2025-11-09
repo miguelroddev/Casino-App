@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:casino_app/core/card/card.dart';
 import 'package:casino_app/core/card/deck.dart';
@@ -14,7 +12,7 @@ import 'package:casino_app/core/exceptions/invalid_amount_of_decks_exception.dar
 import 'package:casino_app/core/exceptions/no_card_in_hand_exception.dart';
 import 'package:casino_app/core/exceptions/not_ace_exception.dart';
 import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
-import 'package:casino_app/core/game/bj_game_state.dart';
+import 'package:casino_app/core/game/bj_game_states/bj_game_state.dart';
 import 'package:casino_app/core/game/events/game_event.dart';
 import 'package:casino_app/core/game/events/invalid_option_event.dart';
 import 'package:casino_app/core/game/events/payout_single_hand_event.dart';
