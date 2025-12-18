@@ -1,7 +1,9 @@
 import 'dart:collection';
 
 import 'package:casino_app/core/date/date.dart';
+import 'package:casino_app/core/exceptions/invalid_credentials_exception.dart';
 import 'package:casino_app/core/exceptions/no_such_player_exception.dart';
+import 'package:casino_app/core/exceptions/username_already_exists_exception.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/models/casino_model.dart' as model;
 import 'package:casino_app/core/player/player_type.dart';
@@ -29,9 +31,17 @@ class Casino {
     return _mapPlayers[idPlayer.toString()]!;
   }
 
-  Player createPlayer(String username, String email, String password){
-    //maybe add logic to check wheter username or email already exists? and throw exception
-    Player player = Player(_idPlayer, username, email, password);
+  Player createPlayer(String username, String password){
+    if (username.isEmpty || password.isEmpty){
+      throw InvalidCredentialsException();
+    }
+    final usernameTaken = _mapPlayers.values.any(
+      (p) => p.username.toLowerCase() == username.toLowerCase(),
+    );
+    if (usernameTaken) {
+      throw UsernameAlreadyExistsException(username);
+    }
+    Player player = Player(_idPlayer, username, password);
     _mapPlayers[_idPlayer.toString()] = player;
     _idPlayer +=1;
     return player;
@@ -73,7 +83,6 @@ class Casino {
       final player = Player(
         modelPlayer.idPlayer,
         modelPlayer.username,
-        modelPlayer.email,
         modelPlayer.password,
       );
 

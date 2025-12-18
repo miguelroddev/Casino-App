@@ -1,4 +1,4 @@
-class NoCardInHandException {
+class NoCardInHandException implements Exception{
   NoCardInHandException();
 
   @override

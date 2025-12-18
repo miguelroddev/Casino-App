@@ -26,8 +26,8 @@ class CasinoManager{
     return _casino.getAllPlayers();
   }
 
-  Player createPlayer(String username, String email, String password){
-    return _casino.createPlayer(username, email, password);
+  Player createPlayer(String username, String password){
+    return _casino.createPlayer(username, password);
   }
 
   void increaseSessionID(){
@@ -49,7 +49,7 @@ class CasinoManager{
     }
   }
 
-  Future<void> saveCasino({String filename = 'casinoBox'}) async {
+  Future<void> saveCasino({String filename = 'casinobox'}) async {
     final box = await Hive.openBox<model.Casino>(filename);
 
     final modelCasino = model.Casino(
@@ -63,7 +63,6 @@ class CasinoManager{
           model.Player(
             player.idPlayer,
             player.username,
-            player.email,
             player.password,
             _convertToModelPlayerType(player.playerType),
             player.bankroll,
@@ -76,10 +75,11 @@ class CasinoManager{
     );
 
     await box.put('casino', modelCasino);
+    await box.flush();
     await box.close();
   }
 
-  static Future<CasinoManager?> loadCasino({String filename = 'casinoBox'}) async {
+  static Future<CasinoManager?> loadCasino({String filename = 'casinobox'}) async {
     try {
       final box = await Hive.openBox<model.Casino>(filename);
       final modelCasino = box.get('casino');

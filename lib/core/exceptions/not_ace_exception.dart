@@ -1,4 +1,4 @@
-class NotAceException {
+class NotAceException implements Exception{
   NotAceException();
 
   @override

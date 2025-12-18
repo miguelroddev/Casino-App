@@ -29,21 +29,19 @@ class Player{
   @HiveField(1)
   final String username;
   @HiveField(2)
-  final String email;
-  @HiveField(3)
   final String password;
-  @HiveField(4)
+  @HiveField(3)
   PlayerType playerType;
-  @HiveField(5)
+  @HiveField(4)
   double bankroll;
-  @HiveField(6)
+  @HiveField(5)
   double sessionMoney;
-  @HiveField(7)
+  @HiveField(6)
   double totalProfit;
-  @HiveField(8)
+  @HiveField(7)
   double totalMoneyBetted;
 
-  Player(this.idPlayer, this.username, this.email, this.password,
+  Player(this.idPlayer, this.username, this.password,
   this.playerType, this.bankroll, this.sessionMoney, 
   this.totalProfit, this.totalMoneyBetted);
 }

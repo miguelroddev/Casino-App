@@ -54,36 +54,33 @@ class PlayerAdapter extends TypeAdapter<Player> {
       fields[0] as int,
       fields[1] as String,
       fields[2] as String,
-      fields[3] as String,
-      fields[4] as PlayerType,
+      fields[3] as PlayerType,
+      fields[4] as double,
       fields[5] as double,
       fields[6] as double,
       fields[7] as double,
-      fields[8] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Player obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.idPlayer)
       ..writeByte(1)
       ..write(obj.username)
       ..writeByte(2)
-      ..write(obj.email)
-      ..writeByte(3)
       ..write(obj.password)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.playerType)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.bankroll)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.sessionMoney)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.totalProfit)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.totalMoneyBetted);
   }
 

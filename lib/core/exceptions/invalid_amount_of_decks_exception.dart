@@ -1,4 +1,4 @@
-class InvalidAmountOfDecksException {
+class InvalidAmountOfDecksException implements Exception{
   final int decks;
 
   InvalidAmountOfDecksException(this.decks);

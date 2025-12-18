@@ -1,4 +1,4 @@
-class InvalidSplitException {
+class InvalidSplitException implements Exception{
   InvalidSplitException();
 
   @override

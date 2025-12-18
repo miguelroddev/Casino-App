@@ -1,4 +1,4 @@
-class NotEnoughMoneyException {
+class NotEnoughMoneyException implements Exception{
   NotEnoughMoneyException();
 
   @override

@@ -1,4 +1,4 @@
-class NoHiddenCardException {
+class NoHiddenCardException implements Exception {
   NoHiddenCardException();
 
   @override

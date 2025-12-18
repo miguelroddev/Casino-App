@@ -1,4 +1,4 @@
-class CannotDoubleException {
+class CannotDoubleException implements Exception{
   CannotDoubleException();
 
   @override

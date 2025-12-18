@@ -1,4 +1,4 @@
-class InvalidMoneyAmountException {
+class InvalidMoneyAmountException implements Exception{
   final double money;
 
   InvalidMoneyAmountException(this.money);

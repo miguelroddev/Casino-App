@@ -1,4 +1,4 @@
-class InvalidEntryException {
+class InvalidEntryException implements Exception{
 
   InvalidEntryException();
 

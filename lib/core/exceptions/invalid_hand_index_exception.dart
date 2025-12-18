@@ -1,4 +1,4 @@
-class InvalidHandIndexException {
+class InvalidHandIndexException implements Exception{
   final int handIndex;
 
   InvalidHandIndexException(this.handIndex);

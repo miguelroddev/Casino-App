@@ -1,8 +1,11 @@
+import 'package:casino_app/core/casino_manager.dart';
+import 'package:casino_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final CasinoManager casinoManager;
+  const Home({super.key, required this.casinoManager});
 
   @override
   State<Home> createState() => _HomeState();
@@ -22,51 +25,50 @@ class _HomeState extends State<Home> {
           ),
         ),
         child : SafeArea(
-          child: Container(
-             child: Column(children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 90, 0, 0),
-                  child: Text("Lx Casino", 
-                  style:TextStyle(color: const Color(0xFFFFBB00),
-                  fontSize: 40, fontFamily:"MontSerrat",
-                  fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 130, 0, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: 250,
-                        height: 60,
-                        child: TextButton(onPressed:() {}, child: Text("Login",
-                        style: TextStyle(color: const Color(0xFFFFBB00),
-                        fontSize: 22),)
-                        ),
-                      ),
-                      SizedBox(height: 40),
-                      SizedBox(
-                        width: 250,
-                        height: 60,
-                        child: TextButton(onPressed:() {}, child: Text("Sign Up",
-                        style: TextStyle(color: const Color(0xFFFFBB00),
-                        fontSize: 22),)),
-                      ),
-                      SizedBox(height: 40),
-                      SizedBox(
-                        width: 250,
-                        height: 60,
-                        child: TextButton(onPressed:() {}, child: Text("Admin Tools",
-                        style: TextStyle(color: const Color(0xFFFFBB00),
-                        fontSize: 22),)),
-                      ),
-                      ],
-                  )
-                ),
-                ],
+          child: Column(children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+              child: const Text("Lx Casino", 
+              style:TextStyle(color: Color(0xFFFFBB00),
+              fontSize: 40, fontFamily:"MontSerrat",
+              fontWeight: FontWeight.w600),
+              ),
             ),
-          )
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 130, 0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 60,
+                    child: TextButton(onPressed:() {}, child: const Text("Login",
+                    style: TextStyle(color: Color(0xFFFFBB00),
+                    fontSize: 22),)
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  SizedBox(
+                    width: 250,
+                    height: 60,
+                    child: TextButton(onPressed:() {
+                      Navigator.pushNamed(context, '/sign_up');
+                    }, child: const Text("Sign Up",
+                    style: TextStyle(color: Color(0xFFFFBB00),
+                    fontSize: 22),)),
+                  ),
+                  const SizedBox(height: 40),
+                  SizedBox(
+                  width: 250,
+                  height: 60,
+                  child: TextButton(onPressed:() {}, child: const Text("Admin Tools",
+                  style: TextStyle(color: Color(0xFFFFBB00),
+                  fontSize: 22),)),
+                  ),
+                ],
+              )
+            ),
+          ],)
         ),
       )
     );

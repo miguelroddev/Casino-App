@@ -6,7 +6,7 @@ import 'package:casino_app/core/player/player_type.dart';
 class Player{
   final int idPlayer;
   final String username;
-  final String email;
+  //final String email;
   final String password;
   PlayerType _playerType = PlayerType.NORMAL;
   double _bankroll = 0;
@@ -14,7 +14,7 @@ class Player{
   double _totalProfit = 0;
   double _totalMoneyBetted = 0; // only serves to keep track of the initial better amount
 
-  Player(this.idPlayer, this.username, this.email, this.password){}
+  Player(this.idPlayer, this.username, this.password){}
 
   // getters
   PlayerType get playerType => _playerType;
@@ -106,6 +106,6 @@ class Player{
 
   @override
   String toString() {
-    return "$idPlayer:$username:$email:$_bankroll:$playerType:$_totalProfit";
+    return "$idPlayer:$username:$_bankroll:$playerType:$_totalProfit";
   }
 }
