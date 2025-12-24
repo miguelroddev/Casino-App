@@ -1,3 +1,6 @@
+import 'package:casino_app/data/user_session.dart';
+import 'package:casino_app/services/auth_service.dart';
+import 'package:casino_app/services/session_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:casino_app/core/exceptions/username_already_exists_exception.dart';
 import 'package:casino_app/core/exceptions/invalid_credentials_exception.dart';
@@ -13,6 +16,19 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+  late final AuthService authService;
+
+  @override
+  void initState() {
+    super.initState();
+    final sessionBox = Hive.box<Session>('sessionbox');
+    final sessionRepo = SessionRepository(sessionBox);
+    authService = AuthService(
+      casinoManager: widget.casinoManager,
+      sessionRepo: sessionRepo,
+    );
+  }
 
   final _formKey = GlobalKey<FormState>();
 
@@ -46,8 +62,7 @@ class _SignUpState extends State<SignUp> {
     setState(() => _isLoading = true);
 
     try {
-      widget.casinoManager.createPlayer(username, password);
-      await widget.casinoManager.saveCasino();
+      await authService.signUp(username, password);
 
       if (!mounted) return;
       _showSnack("Account created successfully!");
@@ -56,7 +71,9 @@ class _SignUpState extends State<SignUp> {
       _showSnack(e.toString());
     } on InvalidCredentialsException catch (e) {
       _showSnack(e.toString());
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint("SIGNUP ERROR: $e");
+      debugPrintStack(stackTrace: st);
       _showSnack("Unexpected error: ${e.toString()}");
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -111,6 +128,7 @@ class _SignUpState extends State<SignUp> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: _passwordCtrl,
+                        obscureText: true,
                         decoration: const InputDecoration(labelText: "Password",),
                         validator: (v) {
                           final value = (v ?? "").trim();

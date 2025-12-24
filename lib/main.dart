@@ -1,4 +1,8 @@
 import 'dart:developer';
+import 'package:casino_app/core/player/player.dart';
+import 'package:casino_app/data/user_session.dart';
+import 'package:casino_app/screens/login.dart';
+import 'package:casino_app/screens/user_home.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,8 +24,13 @@ Future<void> main() async {
     ..registerAdapter(model.DateAdapter())
     ..registerAdapter(model.PlayerTypeAdapter())
     ..registerAdapter(model.PlayerAdapter())
-    ..registerAdapter(model.CasinoAdapter());
+    ..registerAdapter(model.CasinoAdapter())
+    ..registerAdapter(SessionAdapter());
     
+  await Hive.openBox<model.Casino>('casinobox');
+  await Hive.openBox<Session>('sessionBox');
+  debugPrint("isOpen casinobox: ${Hive.isBoxOpen('casinobox')}");
+  debugPrint("isOpen sessionbox: ${Hive.isBoxOpen('sessionbox')}");
   CasinoManager? casinoManager = await CasinoManager.loadCasino();
   casinoManager ??= CasinoManager(Casino());
   
@@ -65,6 +74,18 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => Home(casinoManager: casinoManager),
         "/sign_up": (context) => SignUp(casinoManager: casinoManager),
+        "/login": (context) => Login(casinoManager: casinoManager),
+
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == "/user_home") {
+          final player = settings.arguments as Player;
+          return MaterialPageRoute(
+            builder: (_) => UserHome(player: player),
+            settings: settings,
+          );
+        }
+        return null;
       },
     );
   }

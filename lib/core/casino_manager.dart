@@ -17,7 +17,10 @@ class CasinoManager{
   int get sessionID => _casino.sessionID;
   int get casinoProfit => _casino.casinoProfit;
 
-
+  Player loginPlayer(String username, String password){
+    return _casino.loginPlayer(username, password);
+  }
+  
   Player getPlayer(int idPlayer){
     return _casino.getPlayer(idPlayer);
   }
@@ -50,7 +53,8 @@ class CasinoManager{
   }
 
   Future<void> saveCasino({String filename = 'casinobox'}) async {
-    final box = await Hive.openBox<model.Casino>(filename);
+    //final box = await Hive.openBox<model.Casino>(filename);
+    final box = Hive.box<model.Casino>(filename);
 
     final modelCasino = model.Casino(
       _casino.casinoProfit,
@@ -76,14 +80,13 @@ class CasinoManager{
 
     await box.put('casino', modelCasino);
     await box.flush();
-    await box.close();
+    // await box.close();
   }
 
   static Future<CasinoManager?> loadCasino({String filename = 'casinobox'}) async {
     try {
-      final box = await Hive.openBox<model.Casino>(filename);
+      final box = Hive.box<model.Casino>(filename);
       final modelCasino = box.get('casino');
-      await box.close();
 
       if (modelCasino == null) {
         if (isConsoleMode) {

@@ -42,7 +42,9 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     width: 250,
                     height: 60,
-                    child: TextButton(onPressed:() {}, child: const Text("Login",
+                    child: TextButton(onPressed:() {
+                      Navigator.pushNamed(context, '/login');
+                    }, child: const Text("Login",
                     style: TextStyle(color: Color(0xFFFFBB00),
                     fontSize: 22),)
                     ),

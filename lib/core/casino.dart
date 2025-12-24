@@ -3,7 +3,9 @@ import 'dart:collection';
 import 'package:casino_app/core/date/date.dart';
 import 'package:casino_app/core/exceptions/invalid_credentials_exception.dart';
 import 'package:casino_app/core/exceptions/no_such_player_exception.dart';
+import 'package:casino_app/core/exceptions/password_incorrect_exception.dart';
 import 'package:casino_app/core/exceptions/username_already_exists_exception.dart';
+import 'package:casino_app/core/exceptions/username_doesnt_exist_exception.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/core/models/casino_model.dart' as model;
 import 'package:casino_app/core/player/player_type.dart';
@@ -23,6 +25,30 @@ class Casino {
   int get casinoProfit => _casinoProfit;
   int get idPlayer => _idPlayer;
   List<Player> getAllPlayers() => _mapPlayers.values.toList();
+
+  Player loginPlayer(String username, String password){
+    List<Player> playerList = getAllPlayers();
+    bool found = false;
+    bool correctPassword = false;
+    Player? userPlayer;
+    for (Player player in playerList){
+      if (player.username.toLowerCase() == username.toLowerCase()){
+        found = true;
+        if (player.password.toLowerCase() == password.toLowerCase()){
+          correctPassword = true;
+          userPlayer = player;
+        }
+        break;
+      }
+    }
+    if (!found){
+      throw UsernameDoesntExistException(username);
+    }
+    if (!correctPassword){
+      throw PasswordIncorrectException();
+    }
+    return userPlayer!;
+  }
 
   Player getPlayer(int idPlayer){
     if (_mapPlayers[idPlayer.toString()] == null){
