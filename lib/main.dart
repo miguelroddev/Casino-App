@@ -29,8 +29,6 @@ Future<void> main() async {
     
   await Hive.openBox<model.Casino>('casinobox');
   await Hive.openBox<Session>('sessionBox');
-  debugPrint("isOpen casinobox: ${Hive.isBoxOpen('casinobox')}");
-  debugPrint("isOpen sessionbox: ${Hive.isBoxOpen('sessionbox')}");
   CasinoManager? casinoManager = await CasinoManager.loadCasino();
   casinoManager ??= CasinoManager(Casino());
   

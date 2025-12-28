@@ -72,8 +72,6 @@ class _SignUpState extends State<SignUp> {
     } on InvalidCredentialsException catch (e) {
       _showSnack(e.toString());
     } catch (e, st) {
-      debugPrint("SIGNUP ERROR: $e");
-      debugPrintStack(stackTrace: st);
       _showSnack("Unexpected error: ${e.toString()}");
     } finally {
       if (mounted) setState(() => _isLoading = false);

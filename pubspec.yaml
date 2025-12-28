@@ -82,6 +82,12 @@ flutter:
         - asset: fonts/Montserrat-VariableFont_wght.ttf
         - asset: fonts/Montserrat-SemiBold.ttf
           weight: 600
+    - family: Play
+      fonts:
+        - asset: fonts/Play-Bold.ttf
+    - family: PlayFair
+      fonts:
+        - asset: fonts/Playfair_9pt-BlackItalic.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
