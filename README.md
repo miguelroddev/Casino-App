@@ -38,6 +38,7 @@ It supports:
 
 ```bash
 dart run bin/dev.dart
+```
 
 ---
 
@@ -56,6 +57,7 @@ This version is currently under development.
 
 ```bash
 flutter run
+```
 
 ---
 
