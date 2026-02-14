@@ -2,7 +2,7 @@
 
 A modular casino application built with **Dart** and **Flutter**, designed to simulate both:
 
-- 🎮 A player-facing casino experience (games like Blackjack and Roulette)
+- 🎮 A player-facing casino experience
 - 🏦 A casino management system (profit tracking, analytics, and operational metrics)
 
 The project is structured with a clear separation between business logic and user interfaces, allowing the same core engine to power both a fully functional Command-Line Interface (CLI) and a Flutter-based Android app.
