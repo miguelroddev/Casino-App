@@ -39,6 +39,7 @@ It supports:
 ```bash
 dart run bin/dev.dart
 
+---
 
 ## 📱 Flutter / Android Version (Work in Progress)
 
@@ -56,6 +57,7 @@ This version is currently under development.
 ```bash
 flutter run
 
+---
 
 ## 🛠️ Technologies Used
 
