@@ -38,3 +38,28 @@ It supports:
 
 ```bash
 dart run bin/dev.dart
+
+
+## 📱 Flutter / Android Version (Work in Progress)
+
+A partially functional **Flutter** application is included, aiming to provide:
+
+- 🎮 A graphical player interface  
+- 🔐 An authentication system 
+- 🔄 Integration with the same underlying casino engine  
+- ♠️ Expanded game support  
+
+This version is currently under development.
+
+### ▶️ Run the Flutter App
+
+```bash
+flutter run
+
+
+## 🛠️ Technologies Used
+
+- Dart
+- Flutter
+- Git
+- Modular project architecture
