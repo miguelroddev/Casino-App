@@ -17,6 +17,7 @@ Future<void> main() async {
     ..registerAdapter(model.PlayerTypeAdapter())
     ..registerAdapter(model.PlayerAdapter())
     ..registerAdapter(model.CasinoAdapter());
+  await Hive.openBox<model.Casino>('casinobox');
   isConsoleMode = true;
   CasinoManager? casinoManager = await CasinoManager.loadCasino();
   casinoManager ??= CasinoManager(Casino());
