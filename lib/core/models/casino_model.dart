@@ -40,10 +40,20 @@ class Player{
   double totalProfit;
   @HiveField(7)
   double totalMoneyBetted;
+  @HiveField(8)
+  Map<int, double> dailyProfit;
 
-  Player(this.idPlayer, this.username, this.password,
-  this.playerType, this.bankroll, this.sessionMoney, 
-  this.totalProfit, this.totalMoneyBetted);
+  Player(
+    this.idPlayer, 
+    this.username, 
+    this.password,
+    this.playerType, 
+    this.bankroll, 
+    this.sessionMoney, 
+    this.totalProfit, 
+    this.totalMoneyBetted,
+    {Map<int, double>? dailyProfit,}
+  ) : dailyProfit = dailyProfit ?? {};
 }
 
 @HiveType(typeId: 3)

@@ -1,5 +1,6 @@
 import 'package:casino_app/core/player/player.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HomeTab extends StatefulWidget {
   final Player player;
@@ -24,6 +25,7 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       appBar: AppBar(title: Text("Welcome ${player.username}")),
       body: Container(
+        padding: const EdgeInsets.all(16),
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -32,8 +34,38 @@ class _HomeTabState extends State<HomeTab> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Text("")
+        child: Column(
+          children: [
+            Container(
+              
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFFFF).withValues(alpha: 0.05),
+              
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    "${player.username} is ${player.playerType.toString()}",
+                    style: const TextStyle(
+                      color: Color(0xFFFFBB00),
+                      fontSize: 22,
+                      fontFamily: "PlayFair",
+                    ),
+                  ),
+                  Text(
+                    "Current Bankroll\n •  ${player.bankroll} €",
+                    style: const TextStyle(
+                      color: Color(0xFFFFBB00),
+                      fontSize: 22,
+                      fontFamily: "Play",
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                ],
+              ),
+            )
+          ],
         )
       )
     );

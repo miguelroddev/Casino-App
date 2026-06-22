@@ -59,13 +59,14 @@ class PlayerAdapter extends TypeAdapter<Player> {
       fields[5] as double,
       fields[6] as double,
       fields[7] as double,
+      dailyProfit: (fields[8] as Map?)?.cast<int, double>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Player obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.idPlayer)
       ..writeByte(1)
@@ -81,7 +82,9 @@ class PlayerAdapter extends TypeAdapter<Player> {
       ..writeByte(6)
       ..write(obj.totalProfit)
       ..writeByte(7)
-      ..write(obj.totalMoneyBetted);
+      ..write(obj.totalMoneyBetted)
+      ..writeByte(8)
+      ..write(obj.dailyProfit);
   }
 
   @override
