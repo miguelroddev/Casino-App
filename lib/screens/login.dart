@@ -17,6 +17,16 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+class UserHomeArguments {
+  final Player player;
+  final CasinoManager casinoManager;
+
+  const UserHomeArguments({
+    required this.player,
+    required this.casinoManager,
+  });
+}
+
 class _LoginState extends State<Login> {
 
   late final AuthService authService;
@@ -71,7 +81,7 @@ class _LoginState extends State<Login> {
         context,
         "/user_home",
         (route) => false,
-        arguments: player,
+        arguments: UserHomeArguments(player : player,casinoManager : widget.casinoManager)
       );
     } on UsernameDoesntExistException catch(e){
       _showSnack(e.toString());
