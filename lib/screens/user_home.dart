@@ -6,9 +6,9 @@ import 'package:casino_app/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class UserHome extends StatefulWidget {
-  final Player player;
+  final int playerID;
   final CasinoManager casinoManager;
-  const UserHome({super.key, required this.player, required this.casinoManager});
+  const UserHome({super.key, required this.playerID, required this.casinoManager});
 
   @override
   State<UserHome> createState() => _UserHomeState();
@@ -16,23 +16,23 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   int _selectedIndex = 0;
-  late final Player player;
+  late final int playerID;
   late final CasinoManager casinoManager;
   
 
   @override
   void initState() {
     super.initState();
-    player = widget.player;
+    playerID = widget.playerID;
     casinoManager = widget.casinoManager;
   }
   
   @override
   Widget build(BuildContext context) {
     final _pages = [
-      HomeTab(player: player, casinoManager: casinoManager),
-      GamePage(player: player),
-      ProfilePage(player: player),
+      HomeTab(playerID: playerID, casinoManager: casinoManager),
+      GamePage(playerID: playerID, casinoManager : casinoManager),
+      ProfilePage(playerID: playerID, casinoManager: casinoManager,),
     ];
     return Scaffold(
       body: IndexedStack(

@@ -18,11 +18,11 @@ class Login extends StatefulWidget {
 }
 
 class UserHomeArguments {
-  final Player player;
+  final int playerID;
   final CasinoManager casinoManager;
 
   const UserHomeArguments({
-    required this.player,
+    required this.playerID,
     required this.casinoManager,
   });
 }
@@ -74,14 +74,14 @@ class _LoginState extends State<Login> {
     setState(() => _isLoading = true);
 
     try {
-      final Player player = await authService.login(username, password);
+      final int playerID = await authService.login(username, password);
 
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(
         context,
         "/user_home",
         (route) => false,
-        arguments: UserHomeArguments(player : player,casinoManager : widget.casinoManager)
+        arguments: UserHomeArguments(playerID : playerID,casinoManager : widget.casinoManager)
       );
     } on UsernameDoesntExistException catch(e){
       _showSnack(e.toString());

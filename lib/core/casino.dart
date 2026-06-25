@@ -117,6 +117,7 @@ class Casino {
       player.setTotalProfit(modelPlayer.totalProfit);
       player.setTotalMoneyBetted(modelPlayer.totalMoneyBetted);
       player.setPlayerType(_convertFromModelPlayerType(modelPlayer.playerType));
+      player.setDailyProfit(modelPlayer.dailyProfit);
 
       _mapPlayers[key] = player;
     });

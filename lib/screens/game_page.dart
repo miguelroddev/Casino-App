@@ -1,20 +1,22 @@
+import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
-  final Player player;
-  const GamePage({super.key, required this.player});
+  final int playerID;
+  final CasinoManager casinoManager;
+  const GamePage({super.key, required this.playerID, required this.casinoManager});
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
 class _GamePageState extends State<GamePage> {
-  late final Player player;
+  late final int playerID;
 
   @override
   void initState(){
-    player = widget.player;
+    playerID = widget.playerID;
     super.initState();
   }
 

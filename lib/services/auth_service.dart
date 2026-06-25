@@ -8,10 +8,10 @@ class AuthService {
 
   AuthService({ required this.casinoManager, required this.sessionRepo,});
 
-  Future<Player> login(String username, String password) async {
+  Future<int> login(String username, String password) async {
     final player = casinoManager.loginPlayer(username, password);
     await sessionRepo.setCurrentPlayerId(player.idPlayer);
-    return player;
+    return player.idPlayer;
   }
 
   Future<void> signUp (String username, String password) async{

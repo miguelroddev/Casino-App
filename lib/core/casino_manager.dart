@@ -73,6 +73,7 @@ class CasinoManager{
             player.sessionMoney,
             player.totalProfit,
             player.totalMoneyBetted,
+            dailyProfit: Map<int, double>.from(player.dailyProfit),
           ),
         );
       }),

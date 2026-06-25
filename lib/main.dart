@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
         if (settings.name == "/user_home") {
           final args = settings.arguments as UserHomeArguments;
           return MaterialPageRoute(
-            builder: (_) => UserHome(player: args.player, casinoManager: args.casinoManager,),
+            builder: (_) => UserHome(playerID: args.playerID, casinoManager: args.casinoManager,),
             settings: settings,
           );
         }

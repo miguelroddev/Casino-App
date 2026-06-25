@@ -1,24 +1,25 @@
 import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
+import 'package:casino_app/widgets/profit_line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class HomeTab extends StatefulWidget {
-  final Player player;
+  final int playerID;
   final CasinoManager casinoManager;
-  const HomeTab({super.key, required this.player, required this.casinoManager});
+  const HomeTab({super.key, required this.playerID, required this.casinoManager});
 
   @override
   State<HomeTab> createState() => _HomeTabState();
 }
 
 class _HomeTabState extends State<HomeTab> {
-  late final Player player;
+  late final int playerID;
   late final CasinoManager casinoManager;
 
   @override
   void initState(){
-    player = widget.player;
+    playerID = widget.playerID;
     casinoManager = widget.casinoManager;
     super.initState();
   }
@@ -27,7 +28,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(title: Text("Welcome ${player.username} \nDay ${casinoManager.date.day}"), titleSpacing: 2,),
+      appBar: AppBar(title: Text("Welcome ${casinoManager.getPlayer(playerID).username} \nDay ${casinoManager.date.day}"), titleSpacing: 2,),
       body: Container(
         padding: const EdgeInsets.all(16),
         width: double.infinity,
@@ -51,7 +52,7 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${player.username} is ${player.playerType.toString()}",
+                    "${casinoManager.getPlayer(playerID).username} is ${casinoManager.getPlayer(playerID).playerType.toString()}",
                     style: const TextStyle(
                       color: Color(0xFFFFBB00),
                       fontSize: 22,
@@ -59,7 +60,7 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                   ),
                   Text(
-                    "Current Bankroll\n •  ${player.bankroll} €",
+                    "Current Bankroll\n •  ${casinoManager.getPlayer(playerID).bankroll} €",
                     style: const TextStyle(
                       color: Color(0xFFFFBB00),
                       fontSize: 22,
@@ -67,13 +68,8 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                   ),
                   const SizedBox(height: 50),
-                  const Text(
-                    "Gotta Insert the graph here",
-                    style: const TextStyle(
-                      color: Color(0xFFFFBB00),
-                      fontSize: 22,
-                      fontFamily: "Play",
-                    ),
+                  ProfitLineChart(
+                    player: casinoManager.getPlayer(playerID),
                   ),
                   const SizedBox(height: 50),
                   
@@ -85,9 +81,20 @@ class _HomeTabState extends State<HomeTab> {
                     setState(() {});
                   }, child: Text("Advance day", style: TextStyle(fontSize: 25),),),
             TextButton(onPressed: () {
-              player.increaseBankRoll(1000);
+              casinoManager.getPlayer(playerID).increaseBankRoll(1000);
               setState(() {});
-            }, child: Text("Add 1000€", style: TextStyle(fontSize: 25),),)
+            }, child: Text("Add 1000€ bankroll", style: TextStyle(fontSize: 25),),
+            ),
+            TextButton(onPressed: () {
+              casinoManager.getPlayer(playerID).addTotalProfit(1000, day: casinoManager.date.day);
+              setState(() {});
+            }, child: Text("Add 1000€ profit", style: TextStyle(fontSize: 25),),
+            ),
+            TextButton(onPressed: () {
+              casinoManager.getPlayer(playerID).addTotalProfit(-1000, day: casinoManager.date.day);
+              setState(() {});
+            }, child: Text("Add -1000€ profit", style: TextStyle(fontSize: 25),),
+            ),
           ],
         )
       )

@@ -1,4 +1,6 @@
 
+import 'package:casino_app/core/exceptions/date_doesnt_exist_exception.dart';
+import 'package:casino_app/core/exceptions/invalid_date_exception.dart';
 import 'package:casino_app/core/exceptions/invalid_money_amount_exception.dart';
 import 'package:casino_app/core/exceptions/not_enough_money_exception.dart';
 import 'package:casino_app/core/player/player_type.dart';
@@ -13,6 +15,7 @@ class Player{
   double _sessionMoney = 0; // maybe remove this
   double _totalProfit = 0;
   double _totalMoneyBetted = 0; // only serves to keep track of the initial better amount
+  Map<int, double> _dailyProfit = {};
 
   Player(this.idPlayer, this.username, this.password){}
 
@@ -22,6 +25,13 @@ class Player{
   double get sessionMoney => _sessionMoney;
   double get totalProfit => _totalProfit;
   double get totalMoneyBetted => _totalMoneyBetted;
+  Map<int, double> get dailyProfit => _dailyProfit;
+
+  double getPlayerDailyProfit(int day) {
+    if (day <= 0) throw InvalidDateException(day);
+    if (_dailyProfit[day] == Null) throw DateDoesntExistException(day);
+    return _dailyProfit[day]!;
+  }
 
   void increaseBankRoll(double money){
     if (money <= 0){
@@ -68,7 +78,12 @@ class Player{
     clearTotalMoneyBetted(); //it's here and not at the beggining because of the case there is a split
   }
 
-  void addTotalProfit(double money){
+  void addTotalProfit(double money, {int? day}){
+    if (day == null){
+      _totalProfit += money;
+      return ;
+    }
+    _dailyProfit[day] = (_dailyProfit[day] ?? 0) + money;
     _totalProfit += money;
   }
 
@@ -102,6 +117,10 @@ class Player{
   
   void setPlayerType(PlayerType playerType){
     _playerType = playerType;
+  }
+
+  void setDailyProfit(Map<int, double> dailyProfit){
+    _dailyProfit = dailyProfit;
   }
 
   @override

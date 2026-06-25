@@ -1,11 +1,13 @@
+import 'package:casino_app/core/casino_manager.dart';
 import 'package:casino_app/core/player/player.dart';
 import 'package:casino_app/data/user_session.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class ProfilePage extends StatefulWidget {
-  final Player player;
-  const ProfilePage({super.key, required this.player});
+  final int playerID;
+  final CasinoManager casinoManager;
+  const ProfilePage({super.key, required this.playerID, required this.casinoManager});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -13,16 +15,19 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   
-  late final Player player;
+  late final int playerID;
+  late final CasinoManager casinoManager;
 
   @override
   void initState(){
-    player = widget.player;
+    playerID = widget.playerID;
+    casinoManager = widget.casinoManager;
     super.initState();
   }
 
-  Future<void> _logout() async {
+  Future<void> _logout(casinoManager) async {
     final box = Hive.box<Session>('sessionBox');
+    await casinoManager.saveCasino();
     await box.clear();
     if (!mounted) return;
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
@@ -49,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 250,
               height: 60,
               child: TextButton(
-                onPressed: (){_logout();}, 
+                onPressed: (){_logout(casinoManager);}, 
                 child: const Text("Logout", style: TextStyle(fontSize: 30,
                 fontFamily: "Play", color: Color(0xFFFFBB00)),)),
               ),
